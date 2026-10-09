@@ -1,0 +1,524 @@
+﻿@{
+    Layout = "_AdminLayout";
+
+    ViewData["Title"] = "Members";
+    ViewData["Subtitle"] = "Manage customer accounts and membership status.";
+}
+
+@section Styles {
+    <link rel="stylesheet"
+          href="~/css/members.css"
+          asp-append-version="true" />
+}
+
+@section HeaderActions {
+
+    <button class="btn"
+            id="refreshMembers"
+            type="button">
+
+        <i class="bi bi-arrow-clockwise"></i>
+        Refresh
+
+    </button>
+
+    <button class="btn btn-primary"
+            id="btnAddMember"
+            type="button">
+
+        <i class="bi bi-plus-lg"></i>
+        Add member
+
+    </button>
+
+}
+
+
+<!-- =========================================================
+     PAGE MESSAGE
+========================================================= -->
+
+<section class="alert mb-msg"
+         id="memberMsg"
+         hidden
+         role="status"
+         aria-live="polite">
+</section>
+
+
+<!-- =========================================================
+     SUMMARY
+========================================================= -->
+
+<section class="mb-stats">
+
+    <div class="mb-stat-card">
+
+        <span>Total members</span>
+
+        <strong id="totalMembers">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="mb-stat-card">
+
+        <span>Active</span>
+
+        <strong id="activeMembers">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="mb-stat-card">
+
+        <span>Inactive</span>
+
+        <strong id="inactiveMembers">
+            -
+        </strong>
+
+    </div>
+
+
+    <div class="mb-stat-card">
+
+        <span>New in 30 days</span>
+
+        <strong id="newMembers">
+            -
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     TABLE
+========================================================= -->
+
+<section class="panel member-panel">
+
+    <div class="mb-toolbar">
+
+        <div class="mb-search">
+
+            <i class="bi bi-search"></i>
+
+            <input type="search"
+                   id="memberSearch"
+                   placeholder="Search name, email or phone"
+                   aria-label="Search members" />
+
+        </div>
+
+
+        <select id="tierFilter"
+                aria-label="Filter by tier">
+
+            <option value="">
+                All tiers
+            </option>
+
+            <option value="Bronze">
+                Bronze
+            </option>
+
+            <option value="Silver">
+                Silver
+            </option>
+
+            <option value="Gold">
+                Gold
+            </option>
+
+            <option value="Platinum">
+                Platinum
+            </option>
+
+        </select>
+
+
+        <select id="statusFilter"
+                aria-label="Filter by status">
+
+            <option value="">
+                All status
+            </option>
+
+            <option value="Active" selected>
+                Active
+            </option>
+
+            <option value="Inactive">
+                Inactive
+            </option>
+
+        </select>
+
+
+        <label class="mb-date-filter" for="startDateFilter">
+            <span>Start date</span>
+            <input type="date"
+                   id="startDateFilter"
+                   aria-label="Registration start date" />
+        </label>
+
+
+        <label class="mb-date-filter" for="endDateFilter">
+            <span>End date</span>
+            <input type="date"
+                   id="endDateFilter"
+                   aria-label="Registration end date" />
+        </label>
+
+
+        <span class="mb-count"
+              id="memberResultText">
+        </span>
+
+    </div>
+
+
+    <div class="mb-table-wrap">
+
+        <table class="mb-table">
+
+            <thead>
+
+                <tr>
+
+                    <th class="id-col">
+                        ID
+                    </th>
+
+                    <th>
+                        Member
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Phone
+                    </th>
+
+                    <th>
+                        Tier
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Registered
+                    </th>
+
+                    <th class="action-col">
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="membersTableBody">
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- Loading / Empty -->
+
+    <div class="mb-state"
+         id="membersState">
+
+        <div class="mb-spinner"
+             id="membersSpinner">
+        </div>
+
+        <p id="membersStateText">
+            Loading members...
+        </p>
+
+    </div>
+
+
+    <!-- Pagination -->
+
+    <div class="mb-pager">
+
+        <span id="paginationInfo">
+        </span>
+
+        <div id="membersPagination"
+             class="mb-pages">
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MODAL
+========================================================= -->
+
+<div class="mb-modal"
+     id="memberModal"
+     hidden>
+
+    <div class="mb-backdrop"
+         data-close>
+    </div>
+
+
+    <form class="mb-dialog"
+          id="memberForm"
+          novalidate>
+
+        <!-- HEADER -->
+
+        <header class="mb-dialog-header">
+
+            <div>
+
+                <span class="mb-dialog-kicker">
+                    CUSTOMERS
+                </span>
+
+                <h2 id="memberModalTitle">
+                    Add member
+                </h2>
+
+            </div>
+
+
+            <button type="button"
+                    class="icon-btn"
+                    data-close
+                    aria-label="Close">
+
+                &times;
+
+            </button>
+
+        </header>
+
+
+        <!-- MODAL ERROR -->
+
+        <div class="mb-form-error"
+             id="memberFormError"
+             hidden>
+
+            <strong>
+                Unable to save member
+            </strong>
+
+            <div id="memberFormErrorText"></div>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <div class="mb-grid">
+
+            <label>
+
+                <span>Name</span>
+
+                <input id="mName"
+                       autocomplete="name"
+                       required />
+
+            </label>
+
+
+            <label>
+
+                <span>Email</span>
+
+                <input id="mEmail"
+                       type="email"
+                       autocomplete="email"
+                       required />
+
+            </label>
+
+
+            <label>
+
+                <span>Phone number</span>
+
+                <input id="mPhone"
+                       autocomplete="tel" />
+
+            </label>
+
+
+            <label>
+
+                <span>Birth date</span>
+
+                <input id="mBirth"
+                       type="date" />
+
+            </label>
+
+
+            <label>
+
+                <span>Tier</span>
+
+                <select id="mTier">
+
+                    <option value="Bronze">
+                        Bronze
+                    </option>
+
+                    <option value="Silver">
+                        Silver
+                    </option>
+
+                    <option value="Gold">
+                        Gold
+                    </option>
+
+                    <option value="Platinum">
+                        Platinum
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <label>
+
+                <span>Status</span>
+
+                <select id="mStatus">
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <label>
+
+                <span>Referral By</span>
+
+                <input id="mReferralBy"
+                       placeholder="N/A if none" />
+
+            </label>
+
+
+            <label>
+
+                <span>Email Subscribe</span>
+
+                <select id="mEmailSubcribe">
+
+                    <option value="Yes">
+                        Yes
+                    </option>
+
+                    <option value="No">
+                        No
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <label>
+
+                <span>Notification Status</span>
+
+                <select id="mNotificationStatus">
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <label>
+
+                <span>Password</span>
+
+                <input id="mPassword"
+                       type="password"
+                       autocomplete="new-password" />
+
+                <small id="passwordHint">
+                    Required when creating a new member.
+                </small>
+
+            </label>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <footer class="mb-dialog-footer">
+
+            <button type="button"
+                    class="btn"
+                    data-close>
+
+                Cancel
+
+            </button>
+
+
+            <button type="submit"
+                    class="btn btn-primary"
+                    id="saveMember">
+
+                Create member
+
+            </button>
+
+        </footer>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <script src="~/js/members.js"
+            asp-append-version="true">
+    </script>
+
+}

@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "API Authorization";
+    ViewData["Subtitle"] = "Connect the admin portal to the API with a dedicated JWT account.";
+    Layout = "_AdminLayout";
+    bool connected = ViewBag.IsApiAuthorized == true;
+}
+
+<div class="container-fluid py-4" style="max-width: 900px;">
+    <div class="mb-4">
+        <h1 class="h3 mb-2">API Authorization</h1>
+        <p class="text-muted mb-0">Use your API account to obtain a JWT. The token is kept in your server session and sent as a Bearer token with API requests.</p>
+    </div>
+
+    @if (ViewBag.Success is string success)
+    {
+        <div class="alert alert-success" role="status">@success</div>
+    }
+    @if (ViewBag.Error is string error)
+    {
+        <div class="alert alert-danger" role="alert">@error</div>
+    }
+
+    <section class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+                <div>
+                    <h2 class="h5 mb-1">API account</h2>
+                    <p class="text-muted mb-0">These credentials are used only to request the API JWT. The password is not saved.</p>
+                </div>
+                @if (connected)
+                {
+                    <span class="badge rounded-pill text-bg-success">Connected</span>
+                }
+                else
+                {
+                    <span class="badge rounded-pill text-bg-secondary">Not connected</span>
+                }
+            </div>
+
+            @if (connected && ViewBag.ApiUsername is string apiUsername)
+            {
+                <p class="mb-4">Authorized as <strong>@apiUsername</strong>.</p>
+            }
+
+            <form asp-controller="Admin" asp-action="SaveApiAuthorization" method="post" autocomplete="off">
+                <div class="mb-3">
+                    <label for="apiUsername" class="form-label">API username</label>
+                    <input id="apiUsername" name="Username" class="form-control" autocomplete="username" value="@ViewBag.ApiUsername" placeholder="Uses .env value when empty" />
+                </div>
+                <div class="mb-4">
+                    <label for="apiPassword" class="form-label">API password</label>
+                    <input id="apiPassword" name="Password" type="password" class="form-control" autocomplete="new-password" placeholder="Uses .env value when empty" />
+                </div>
+                <button type="submit" class="btn btn-primary">Authorize API</button>
+            </form>
+
+            @if (connected)
+            {
+                <hr class="my-4" />
+                <form asp-controller="Admin" asp-action="ClearApiAuthorization" method="post">
+                    <button type="submit" class="btn btn-outline-secondary">Clear API authorization</button>
+                </form>
+            }
+        </div>
+    </section>
+</div>

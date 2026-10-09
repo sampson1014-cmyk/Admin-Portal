@@ -1,0 +1,1166 @@
+﻿/* =========================================================
+   EDUVOSHOP MEMBERS PAGE
+   Monochrome Luxury Admin Design
+   Matches the current Members.cshtml exactly
+   ========================================================= */
+
+:root {
+    --mb-bg: #f3f3f1;
+    --mb-card: #ffffff;
+    --mb-dark: #171716;
+    --mb-dark-2: #252523;
+    --mb-text: #222220;
+    --mb-muted: #7b7b76;
+    --mb-border: #e5e5e1;
+    --mb-border-dark: #d6d6d1;
+    --mb-hover: #f8f8f6;
+    --mb-green-bg: #eaf2ec;
+    --mb-green-text: #4b6f57;
+    --mb-red-bg: #f8eaea;
+    --mb-red-text: #8f4747;
+    --mb-radius: 16px;
+    --mb-radius-small: 10px;
+    --mb-shadow: 0 8px 28px rgba(0, 0, 0, 0.045);
+    --mb-shadow-modal: 0 30px 90px rgba(0, 0, 0, 0.22);
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+body {
+    background: var(--mb-bg);
+}
+
+
+.mb-msg {
+    margin: 0 0 20px;
+    padding: 13px 16px;
+    border: 0;
+    border-radius: 12px;
+    font-size: 13px;
+    box-shadow: var(--mb-shadow);
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.mb-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+
+.mb-stat-card {
+    min-width: 0;
+    padding: 21px 22px;
+    background: var(--mb-card);
+    border: 1px solid var(--mb-border);
+    border-radius: var(--mb-radius);
+    box-shadow: var(--mb-shadow);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+
+    .mb-stat-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--mb-border-dark);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+    }
+
+
+    .mb-stat-card span {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--mb-muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .75px;
+        text-transform: uppercase;
+    }
+
+
+    .mb-stat-card strong {
+        display: block;
+        color: var(--mb-dark);
+        font-size: 30px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: -.5px;
+    }
+
+
+/* =========================================================
+   MEMBER PANEL
+========================================================= */
+
+.member-panel {
+    width: 100%;
+    padding: 0;
+    background: var(--mb-card);
+    border: 1px solid var(--mb-border);
+    border-radius: var(--mb-radius);
+    box-shadow: var(--mb-shadow);
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.mb-toolbar {
+    display: grid;
+    grid-template-columns: minmax(230px, 1fr) 135px 135px 145px 145px auto;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 20px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--mb-border);
+}
+
+.mb-date-filter {
+    position: relative;
+    display: block;
+    min-width: 0;
+}
+
+.mb-date-filter span {
+    position: absolute;
+    top: -7px;
+    left: 10px;
+    z-index: 1;
+    padding: 0 4px;
+    color: var(--mb-muted);
+    background: #ffffff;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.mb-date-filter input {
+    width: 100%;
+    height: 42px;
+    padding: 0 9px;
+    border: 1px solid var(--mb-border);
+    border-radius: var(--mb-radius-small);
+    background: #fafaf8;
+    color: var(--mb-text);
+    font-size: 11px;
+    outline: none;
+}
+
+.mb-date-filter input:focus {
+    border-color: #2a2a28;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(23, 23, 22, .06);
+}
+
+.member-inactive-note {
+    display: inline-flex;
+    min-height: 31px;
+    align-items: center;
+    gap: 5px;
+    padding: 0 8px;
+    color: var(--mb-muted);
+    font-size: 11px;
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.mb-search {
+    position: relative;
+    width: 100%;
+}
+
+
+    .mb-search > i {
+        position: absolute;
+        top: 50%;
+        left: 14px;
+        transform: translateY(-50%);
+        color: #999993;
+        font-size: 14px;
+        pointer-events: none;
+    }
+
+
+    .mb-search input {
+        width: 100%;
+        height: 42px;
+        padding: 0 14px 0 39px;
+        background: #fafaf8;
+        border: 1px solid var(--mb-border);
+        border-radius: var(--mb-radius-small);
+        color: var(--mb-text);
+        font-size: 13px;
+        outline: none;
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+
+        .mb-search input::placeholder {
+            color: #a3a39e;
+        }
+
+
+        .mb-search input:focus {
+            background: #ffffff;
+            border-color: #2a2a28;
+            box-shadow: 0 0 0 3px rgba(23, 23, 22, .06);
+        }
+
+
+/* =========================================================
+   SELECTS
+========================================================= */
+
+.mb-toolbar > select {
+    width: 100%;
+    height: 42px;
+    padding: 0 34px 0 12px;
+    background-color: #fafaf8;
+    border: 1px solid var(--mb-border);
+    border-radius: var(--mb-radius-small);
+    color: var(--mb-text);
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+
+    .mb-toolbar > select:focus {
+        background: #ffffff;
+        border-color: #2a2a28;
+        box-shadow: 0 0 0 3px rgba(23, 23, 22, .06);
+    }
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+#refreshMembers,
+#btnAddMember {
+    height: 42px;
+    border-radius: var(--mb-radius-small);
+    padding: 0 15px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+
+/* Refresh */
+
+#refreshMembers {
+    background: #ffffff;
+    border: 1px solid var(--mb-border-dark);
+    color: var(--mb-dark);
+}
+
+
+    #refreshMembers:hover {
+        background: var(--mb-dark);
+        border-color: var(--mb-dark);
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+/* Add */
+
+#btnAddMember {
+    background: var(--mb-dark);
+    border: 1px solid var(--mb-dark);
+    color: #ffffff;
+}
+
+
+    #btnAddMember:hover {
+        background: #000000;
+        border-color: #000000;
+        transform: translateY(-1px);
+    }
+
+
+/* =========================================================
+   COUNT
+========================================================= */
+
+.mb-count {
+    min-width: max-content;
+    color: var(--mb-muted);
+    font-size: 12px;
+    text-align: right;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.mb-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: #ffffff;
+    scrollbar-width: thin;
+}
+
+
+    .mb-table-wrap::-webkit-scrollbar {
+        height: 7px;
+    }
+
+
+    .mb-table-wrap::-webkit-scrollbar-track {
+        background: #f5f5f2;
+    }
+
+
+    .mb-table-wrap::-webkit-scrollbar-thumb {
+        background: #d0d0cb;
+        border-radius: 20px;
+    }
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.mb-table {
+    width: 100%;
+    min-width: 900px;
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: auto;
+}
+
+
+    .mb-table thead th {
+        height: 52px;
+        padding: 0 15px;
+        background: #f7f7f4;
+        border-bottom: 1px solid var(--mb-border);
+        color: #6e6e69;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .7px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+
+    .mb-table tbody td {
+        height: 63px;
+        padding: 10px 15px;
+        background: #ffffff;
+        border-bottom: 1px solid #eeeeeb;
+        color: #30302d;
+        font-size: 13px;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+
+    .mb-table tbody tr {
+        transition: background-color .15s ease;
+    }
+
+
+        .mb-table tbody tr:hover td {
+            background: var(--mb-hover);
+        }
+
+
+        .mb-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+
+    /* =========================================================
+   COLUMN WIDTHS
+========================================================= */
+
+    .mb-table .id-col {
+        width: 65px;
+        text-align: center;
+    }
+
+
+    .mb-table th:nth-child(2) {
+        min-width: 150px;
+    }
+
+
+    .mb-table th:nth-child(3) {
+        min-width: 210px;
+    }
+
+
+    .mb-table th:nth-child(4) {
+        min-width: 145px;
+    }
+
+
+    .mb-table th:nth-child(5) {
+        min-width: 100px;
+    }
+
+
+    .mb-table th:nth-child(6) {
+        min-width: 100px;
+    }
+
+
+    .mb-table th:nth-child(7) {
+        min-width: 130px;
+    }
+
+
+    .mb-table .action-col {
+        width: 145px;
+        text-align: right;
+    }
+
+
+    .mb-table td:last-child {
+        text-align: right;
+    }
+
+
+    /* =========================================================
+   TABLE STATUS / TEXT
+========================================================= */
+
+    .mb-table td:first-child {
+        color: #888883;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+    .mb-table td:nth-child(2) {
+        color: var(--mb-dark);
+        font-weight: 600;
+    }
+
+
+    .mb-table td:nth-child(3) {
+        color: #555550;
+    }
+
+
+    .mb-table td:nth-child(4) {
+        color: #666661;
+    }
+
+
+    /* =========================================================
+   TABLE BUTTONS
+========================================================= */
+
+    .mb-table td:last-child {
+        white-space: nowrap;
+    }
+
+
+        .mb-table td:last-child button {
+            height: 31px;
+            min-width: 56px;
+            padding: 0 10px;
+            margin-left: 5px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+
+        .mb-table td:last-child .btn-outline-dark {
+            background: #ffffff;
+            border: 1px solid #d7d7d2;
+            color: #3b3b38;
+        }
+
+
+            .mb-table td:last-child .btn-outline-dark:hover {
+                background: var(--mb-dark);
+                border-color: var(--mb-dark);
+                color: #ffffff;
+            }
+
+
+        .mb-table td:last-child .btn-outline-danger {
+            background: #ffffff;
+            border: 1px solid #ead6d6;
+            color: var(--mb-red-text);
+        }
+
+
+            .mb-table td:last-child .btn-outline-danger:hover {
+                background: #964d4d;
+                border-color: #964d4d;
+                color: #ffffff;
+            }
+
+
+    /* =========================================================
+   BOOTSTRAP BADGES CREATED BY JS
+========================================================= */
+
+    .mb-table .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 64px;
+        min-height: 25px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+
+        /* Tier */
+
+        .mb-table .badge.bg-light {
+            background: #f3f3f0 !important;
+            border: 1px solid #e2e2dd !important;
+            color: #555550 !important;
+        }
+
+
+        /* Active */
+
+        .mb-table .badge.bg-success {
+            background: var(--mb-green-bg) !important;
+            color: var(--mb-green-text) !important;
+        }
+
+
+        /* Inactive */
+
+        .mb-table .badge.bg-secondary {
+            background: #eeeeeb !important;
+            color: #70706a !important;
+        }
+
+
+/* =========================================================
+   LOADING / EMPTY STATE
+========================================================= */
+
+.mb-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 185px;
+    padding: 25px;
+    background: #ffffff;
+    color: var(--mb-muted);
+    text-align: center;
+}
+
+
+    .mb-state p {
+        margin: 12px 0 0;
+        font-size: 13px;
+    }
+
+
+/* Spinner */
+
+.mb-spinner {
+    width: 27px;
+    height: 27px;
+    border: 2px solid #e2e2dd;
+    border-top-color: var(--mb-dark);
+    border-radius: 50%;
+    animation: mbSpin .75s linear infinite;
+}
+
+
+@keyframes mbSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.mb-pager {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    min-height: 66px;
+    padding: 14px 20px;
+    background: #ffffff;
+    border-top: 1px solid var(--mb-border);
+}
+
+
+#paginationInfo {
+    color: var(--mb-muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+
+.mb-pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+    .mb-pages .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 34px;
+        height: 34px;
+        padding: 0 9px;
+        background: #ffffff;
+        border: 1px solid var(--mb-border);
+        border-radius: 8px !important;
+        color: #555550;
+        font-size: 12px;
+        box-shadow: none;
+        cursor: pointer;
+        transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+    }
+
+
+        .mb-pages .page-link:hover {
+            background: #f2f2ef;
+            border-color: #d0d0cb;
+            color: var(--mb-dark);
+        }
+
+
+    .mb-pages .page-item.active .page-link {
+        background: var(--mb-dark);
+        border-color: var(--mb-dark);
+        color: #ffffff;
+    }
+
+
+    .mb-pages .page-item.disabled .page-link {
+        background: #f7f7f4;
+        color: #aaa9a4;
+        opacity: .7;
+        cursor: not-allowed;
+    }
+
+
+/* =========================================================
+   CUSTOM MODAL
+========================================================= */
+
+.mb-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .2s ease, visibility .2s ease;
+}
+
+
+    /*
+   IMPORTANT:
+   Your HTML uses hidden attribute.
+   When hidden, don't show the modal.
+*/
+
+    .mb-modal[hidden] {
+        display: none !important;
+    }
+
+
+/* =========================================================
+   MODAL BACKDROP
+========================================================= */
+
+.mb-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 15, 14, .55);
+    backdrop-filter: blur(5px);
+}
+
+
+/* =========================================================
+   MODAL DIALOG
+========================================================= */
+
+.mb-dialog {
+    position: relative;
+    z-index: 2;
+    width: min(680px, 100%);
+    max-height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 18px;
+    box-shadow: var(--mb-shadow-modal);
+    overflow: hidden;
+    animation: mbModalIn .2s ease;
+}
+
+
+@keyframes mbModalIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.mb-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 21px 24px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--mb-border);
+    flex-shrink: 0;
+}
+
+
+.mb-dialog-kicker {
+    display: block;
+    margin-bottom: 5px;
+    color: #95958f;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+
+.mb-dialog-header h2 {
+    margin: 0;
+    color: var(--mb-dark);
+    font-size: 21px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -.3px;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    padding: 0;
+    background: #f6f6f3;
+    border: 1px solid #e5e5e1;
+    border-radius: 9px;
+    color: #5d5d58;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+
+    .icon-btn:hover {
+        background: var(--mb-dark);
+        border-color: var(--mb-dark);
+        color: #ffffff;
+    }
+
+
+/* =========================================================
+   FORM ERROR
+========================================================= */
+
+.mb-form-error {
+    margin: 18px 24px 0;
+    padding: 12px 14px;
+    background: var(--mb-red-bg);
+    border: 1px solid #efd3d3;
+    border-radius: 10px;
+    color: var(--mb-red-text);
+    font-size: 12px;
+}
+
+
+    .mb-form-error strong {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 12px;
+    }
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.mb-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 15px;
+    padding: 22px 24px 24px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+
+    .mb-grid::-webkit-scrollbar {
+        width: 7px;
+    }
+
+
+    .mb-grid::-webkit-scrollbar-track {
+        background: #f6f6f3;
+    }
+
+
+    .mb-grid::-webkit-scrollbar-thumb {
+        background: #d2d2cd;
+        border-radius: 20px;
+    }
+
+
+    /* =========================================================
+   FORM LABEL
+========================================================= */
+
+    .mb-grid label {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        min-width: 0;
+    }
+
+
+        .mb-grid label > span {
+            color: #5f5f5a;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .15px;
+        }
+
+
+    /* =========================================================
+   FORM INPUTS
+========================================================= */
+
+    .mb-grid input,
+    .mb-grid select {
+        width: 100%;
+        height: 42px;
+        min-height: 42px;
+        padding: 0 12px;
+        background: #ffffff;
+        border: 1px solid var(--mb-border-dark);
+        border-radius: 9px;
+        color: var(--mb-text);
+        font-size: 13px;
+        outline: none;
+        transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+
+
+        .mb-grid input::placeholder {
+            color: #aaa9a4;
+        }
+
+
+        .mb-grid input:focus,
+        .mb-grid select:focus {
+            background: #ffffff;
+            border-color: var(--mb-dark);
+            box-shadow: 0 0 0 3px rgba(23, 23, 22, .06);
+        }
+
+
+/* =========================================================
+   PASSWORD HINT
+========================================================= */
+
+#passwordHint {
+    margin-top: -2px;
+    color: #999993;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+========================================================= */
+
+.mb-dialog-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    padding: 16px 24px;
+    background: #ffffff;
+    border-top: 1px solid var(--mb-border);
+    flex-shrink: 0;
+}
+
+
+    /* =========================================================
+   MODAL BUTTONS
+========================================================= */
+
+    .mb-dialog-footer .btn {
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 9px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+        .mb-dialog-footer .btn:not(.btn-primary) {
+            background: #ffffff;
+            border: 1px solid var(--mb-border-dark);
+            color: #555550;
+        }
+
+
+            .mb-dialog-footer .btn:not(.btn-primary):hover {
+                background: #f3f3f0;
+                color: var(--mb-dark);
+            }
+
+
+    .mb-dialog-footer .btn-primary {
+        background: var(--mb-dark);
+        border: 1px solid var(--mb-dark);
+        color: #ffffff;
+    }
+
+
+        .mb-dialog-footer .btn-primary:hover {
+            background: #000000;
+            border-color: #000000;
+        }
+
+
+/* =========================================================
+   HEADER ACTIONS
+   Your _AdminLayout supplies the HeaderActions area.
+========================================================= */
+
+.btn {
+    box-shadow: none;
+}
+
+
+    .btn:focus,
+    .btn:active {
+        box-shadow: 0 0 0 3px rgba(23, 23, 22, .06) !important;
+    }
+
+
+/* =========================================================
+   RESPONSIVE - 1100px
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .mb-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    .mb-toolbar {
+        grid-template-columns: minmax(220px, 1fr) 135px 135px;
+    }
+
+
+    .mb-count {
+        grid-column: 1 / -1;
+        justify-self: start;
+        text-align: left;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 800px
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .mb-toolbar {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .mb-search {
+        grid-column: 1 / -1;
+    }
+
+
+    .mb-count {
+        grid-column: 1 / -1;
+    }
+
+
+    .mb-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 650px
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .mb-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+
+    .mb-stat-card {
+        padding: 17px;
+    }
+
+
+        .mb-stat-card strong {
+            font-size: 25px;
+        }
+
+
+    .mb-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+
+    .mb-search {
+        grid-column: auto;
+    }
+
+
+    .mb-count {
+        grid-column: auto;
+        justify-self: start;
+    }
+
+
+    .mb-pager {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+
+    .mb-pages {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+
+    .mb-modal {
+        padding: 12px;
+    }
+
+
+    .mb-dialog {
+        max-height: calc(100vh - 24px);
+        border-radius: 15px;
+    }
+
+
+    .mb-dialog-header {
+        padding: 18px 18px;
+    }
+
+
+    .mb-grid {
+        padding: 18px;
+    }
+
+
+    .mb-dialog-footer {
+        padding: 14px 18px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - 450px
+========================================================= */
+
+@media (max-width: 450px) {
+
+    .mb-stats {
+        grid-template-columns: 1fr;
+    }
+
+
+    .mb-stat-card strong {
+        font-size: 28px;
+    }
+
+
+    .mb-dialog-header h2 {
+        font-size: 18px;
+    }
+
+
+    .mb-dialog-footer {
+        flex-direction: column-reverse;
+    }
+
+
+        .mb-dialog-footer .btn {
+            width: 100%;
+        }
+}

@@ -1,0 +1,66 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Vouchers";
+    ViewData["Subtitle"] = "Create and manage member vouchers.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/vouchers.css" asp-append-version="true" />
+}
+
+<div class="vouchers-page">
+    <section class="vouchers-heading">
+        <div><h2>Voucher Management</h2><p>Manage voucher offers, redemption points, availability, and expiry dates.</p></div>
+        <div class="vouchers-heading-actions"><button type="button" id="refreshVouchers" class="voucher-button secondary"><i class="bi bi-arrow-clockwise"></i><span>Refresh</span></button><button type="button" id="addVoucher" class="voucher-button primary"><i class="bi bi-plus-lg"></i> Add voucher</button></div>
+    </section>
+
+    <div id="voucherMessage" class="voucher-message" role="alert" hidden></div>
+
+    <section class="voucher-summary" aria-label="Voucher summary">
+        <article><span class="voucher-summary-icon total"><i class="bi bi-ticket-perforated"></i></span><div><small>Total vouchers</small><strong id="voucherTotal">0</strong><p>Voucher catalogue</p></div></article>
+        <article><span class="voucher-summary-icon active"><i class="bi bi-check-circle"></i></span><div><small>Active</small><strong id="voucherActive">0</strong><p>Available to members</p></div></article>
+        <article><span class="voucher-summary-icon expired"><i class="bi bi-calendar-x"></i></span><div><small>Expired</small><strong id="voucherExpired">0</strong><p>Past the expiry date</p></div></article>
+        <article><span class="voucher-summary-icon points"><i class="bi bi-stars"></i></span><div><small>Average points</small><strong id="voucherAveragePoints">0</strong><p>Average redemption cost</p></div></article>
+    </section>
+
+    <section class="vouchers-card">
+        <header class="vouchers-toolbar"><div><h3>Voucher Catalogue</h3><p id="voucherResultText" aria-live="polite">Loading vouchers...</p></div><button type="button" id="exportVouchers" class="voucher-button secondary" disabled><i class="bi bi-download"></i> Export CSV</button></header>
+        <div class="voucher-filters">
+            <label class="voucher-search" for="voucherSearch"><i class="bi bi-search"></i><input id="voucherSearch" type="search" placeholder="Search voucher name, title or category" /></label>
+            <label><span>Status</span><select id="voucherStatus"><option value="">All statuses</option></select></label>
+            <label><span>Category</span><select id="voucherCategory"><option value="">All categories</option></select></label>
+            <label><span>Sort</span><select id="voucherSort"><option value="newest">Newest first</option><option value="expiry">Expiry soon</option><option value="points-asc">Lowest points</option><option value="points-desc">Highest points</option><option value="name">Name A-Z</option></select></label>
+        </div>
+        <div id="voucherLoading" class="voucher-state"><div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading</span></div><p>Loading vouchers...</p></div>
+        <div id="voucherEmpty" class="voucher-state" hidden><i class="bi bi-ticket-perforated"></i><h4 id="voucherEmptyTitle">No vouchers yet</h4><p id="voucherEmptyText">Create the first voucher for members.</p><button type="button" id="retryVouchers" class="voucher-button secondary" hidden>Try again</button></div>
+        <div id="voucherTableWrapper" class="table-responsive" hidden><table class="voucher-table"><thead><tr><th>Voucher</th><th>Category</th><th>Points</th><th>Created</th><th>Expires</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr></thead><tbody id="voucherTableBody"></tbody></table></div>
+    </section>
+</div>
+
+<div class="modal fade" id="voucherFormModal" tabindex="-1" aria-labelledby="voucherFormTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered"><div class="modal-content voucher-modal"><form id="voucherForm" novalidate>
+        <div class="modal-header"><div><p id="voucherFormEyebrow" class="voucher-modal-eyebrow">New voucher</p><h2 id="voucherFormTitle" class="modal-title">Create a new voucher</h2></div><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+        <div class="modal-body"><input type="hidden" id="voucherId" /><div class="voucher-form-grid">
+            <label><span>Name <b>*</b></span><input id="voucherName" required maxlength="120" placeholder="e.g. RM10 Cash Voucher" /></label>
+            <label><span>Title</span><input id="voucherTitle" maxlength="150" placeholder="Member-facing title" /></label>
+            <label><span>Short title</span><input id="voucherShortTitle" maxlength="80" placeholder="Compact display name" /></label>
+            <label><span>Subtitle</span><input id="voucherSubTitle" maxlength="180" placeholder="A short supporting message" /></label>
+            <label><span>Points required <b>*</b></span><input id="voucherPoint" type="number" min="0" step="1" required placeholder="0" /></label>
+            <label><span>Category</span><input id="voucherCategoryInput" maxlength="80" placeholder="e.g. Food, Drink, All" /></label>
+            <label><span>Status <b>*</b></span><select id="voucherStatusInput" required><option value="Active">Active</option><option value="Inactive">Inactive</option><option value="Expired">Expired</option></select></label>
+            <label><span>Image path or URL</span><input id="voucherImage" placeholder="https://example.com/voucher.jpg" /></label>
+            <label><span>Start date</span><input id="voucherCreateDate" type="datetime-local" /></label>
+            <label><span>Expiry date</span><input id="voucherExpireDate" type="datetime-local" /></label>
+            <label class="wide"><span>Description</span><textarea id="voucherDescription" rows="4" maxlength="1000" placeholder="Explain what the voucher provides and how to use it."></textarea></label>
+            <label class="wide"><span>iOS description</span><textarea id="voucherDescriptionIos" rows="3" maxlength="1000" placeholder="Leave empty to use the main description."></textarea></label>
+            <label class="wide"><span>Terms and conditions</span><textarea id="voucherTnc" rows="4" maxlength="2000" placeholder="Add redemption rules, limits, and exclusions."></textarea></label>
+        </div></div>
+        <div class="modal-footer voucher-form-footer"><div id="voucherFormError" class="voucher-form-error" role="alert" hidden></div><div class="voucher-form-actions"><button type="button" class="voucher-button secondary" data-bs-dismiss="modal">Cancel</button><button type="submit" id="saveVoucher" class="voucher-button primary"><span class="spinner-border spinner-border-sm" hidden></span><span>Create voucher</span></button></div></div>
+    </form></div></div>
+</div>
+
+<div class="modal fade" id="voucherDeleteModal" tabindex="-1" aria-labelledby="voucherDeleteTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content voucher-modal voucher-delete-modal"><div class="modal-body"><span class="voucher-delete-icon"><i class="bi bi-trash3"></i></span><h2 id="voucherDeleteTitle">Delete voucher?</h2><p>This permanently removes <strong id="voucherDeleteName">this voucher</strong> from the catalogue.</p><div id="voucherDeleteError" class="voucher-form-error" role="alert" hidden></div></div><div class="modal-footer"><button type="button" class="voucher-button secondary" data-bs-dismiss="modal">Cancel</button><button type="button" id="confirmDeleteVoucher" class="voucher-button danger"><span class="spinner-border spinner-border-sm" hidden></span><span>Delete voucher</span></button></div></div></div></div>
+
+@section Scripts {
+    <script src="~/js/vouchers.js" asp-append-version="true"></script>
+}

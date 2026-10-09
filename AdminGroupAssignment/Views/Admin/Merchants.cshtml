@@ -1,0 +1,230 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    ViewData["Title"] = "Merchant Management";
+    ViewData["Subtitle"] = "Manage merchants, outlets, staff and menu.";
+}
+
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/merchants.css"
+          asp-append-version="true" />
+
+}
+
+
+<div class="merchant-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="merchant-header">
+
+        <div>
+
+            <h2>
+                Merchant Management
+            </h2>
+
+            <p>
+                Select a category below to manage your merchant system.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CATEGORY CARDS
+    ====================================================== -->
+
+    <div class="merchant-category-grid">
+
+
+        <!-- =================================================
+             MERCHANTS
+        ================================================== -->
+
+        <a asp-controller="Admin"
+           asp-action="MerchantList"
+           class="merchant-category">
+
+            <div>
+
+                <div class="merchant-category-icon">
+
+                    <i class="bi bi-shop"></i>
+
+                </div>
+
+
+                <h3>
+                    Merchants
+                </h3>
+
+
+                <p>
+                    View and manage all registered merchants.
+                </p>
+
+            </div>
+
+
+            <div class="merchant-category-bottom">
+
+                <span>
+                    Manage Merchants
+                </span>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </div>
+
+        </a>
+
+
+
+        <!-- =================================================
+             OUTLETS
+        ================================================== -->
+
+        <a asp-controller="Admin"
+           asp-action="Outlets"
+           class="merchant-category">
+
+            <div>
+
+                <div class="merchant-category-icon">
+
+                    <i class="bi bi-geo-alt"></i>
+
+                </div>
+
+
+                <h3>
+                    Outlets
+                </h3>
+
+
+                <p>
+                    Manage merchant branches and outlet locations.
+                </p>
+
+            </div>
+
+
+            <div class="merchant-category-bottom">
+
+                <span>
+                    Manage Outlets
+                </span>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </div>
+
+        </a>
+
+
+
+        <!-- =================================================
+             STAFF
+        ================================================== -->
+
+        <a asp-controller="Admin"
+           asp-action="Staff"
+           class="merchant-category">
+
+            <div>
+
+                <div class="merchant-category-icon">
+
+                    <i class="bi bi-person-badge"></i>
+
+                </div>
+
+
+                <h3>
+                    Staff
+                </h3>
+
+
+                <p>
+                    Manage staff members assigned to merchants.
+                </p>
+
+            </div>
+
+
+            <div class="merchant-category-bottom">
+
+                <span>
+                    Manage Staff
+                </span>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </div>
+
+        </a>
+
+
+
+        <!-- =================================================
+             MENU
+        ================================================== -->
+
+        <a asp-controller="Admin"
+           asp-action="Menu"
+           class="merchant-category">
+
+            <div>
+
+                <div class="merchant-category-icon">
+
+                    <i class="bi bi-menu-button-wide"></i>
+
+                </div>
+
+
+                <h3>
+                    Menu
+                </h3>
+
+
+                <p>
+                    Manage menu items and merchant products.
+                </p>
+
+            </div>
+
+
+            <div class="merchant-category-bottom">
+
+                <span>
+                    Manage Menu
+                </span>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </div>
+
+        </a>
+
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script src="~/js/merchants.js"
+            asp-append-version="true">
+    </script>
+
+}

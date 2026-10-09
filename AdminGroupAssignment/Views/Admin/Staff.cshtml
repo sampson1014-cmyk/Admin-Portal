@@ -1,0 +1,57 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Staff";
+    ViewData["Subtitle"] = "Manage staff accounts for each merchant.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/merchant-list.css" asp-append-version="true" />
+}
+
+<div class="merchant-list-page">
+    <div class="merchant-list-header">
+        <div><h2>Staff</h2><p>View, add, edit, and remove merchant staff accounts.</p></div>
+        <div class="merchant-header-actions">
+            <button type="button" class="merchant-refresh-btn" id="refreshStaff"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+            <button type="button" class="merchant-add-btn" id="addStaffButton"><i class="bi bi-plus-lg"></i> Add Staff</button>
+        </div>
+    </div>
+
+    <div id="staffMessage" class="merchant-message" hidden></div>
+
+    <div class="merchant-stats">
+        <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-person-badge"></i></div><div><span>Total Staff</span><strong id="totalStaff">0</strong></div></div>
+        <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-check-circle"></i></div><div><span>Active</span><strong id="activeStaff">0</strong></div></div>
+        <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-buildings"></i></div><div><span>Merchants</span><strong id="staffMerchantCount">0</strong></div></div>
+    </div>
+
+    <div class="merchant-filter-card staff-filter-card">
+        <div class="merchant-search-box"><i class="bi bi-search"></i><input type="text" id="staffSearch" placeholder="Search staff..." /></div>
+        <select id="staffMerchantFilter" class="merchant-filter-select"><option value="">All Merchants</option></select>
+        <select id="staffTypeFilter" class="merchant-filter-select" aria-label="Filter by staff type"><option value="">All Types</option><option value="Staff">Staff</option><option value="Manager">Manager</option><option value="Admin">Admin</option></select>
+        <select id="staffStatusFilter" class="merchant-filter-select" aria-label="Filter by status"><option value="">All Statuses</option><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
+        <button type="button" class="merchant-clear-btn" id="clearStaffFilters">Clear</button>
+    </div>
+
+    <div class="merchant-table-card">
+        <div class="merchant-table-header"><div><h3>Staff List</h3><p id="staffResultText"></p></div></div>
+        <div id="staffState" class="merchant-state" hidden><i class="bi bi-person-badge"></i><h4 id="staffStateTitle">No Staff</h4><p id="staffStateText">No staff records were found.</p></div>
+        <div class="table-responsive" id="staffTableWrapper" hidden><table class="table merchant-table"><thead><tr><th>ID</th><th>Staff</th><th>Type</th><th>Merchant</th><th>Contact</th><th>Status</th><th class="text-end">Action</th></tr></thead><tbody id="staffTableBody"></tbody></table></div>
+    </div>
+</div>
+
+<div id="staffModal" class="staff-dialog-overlay" hidden><div class="staff-dialog-card" role="dialog" aria-modal="true" aria-labelledby="staffModalTitle">
+    <div class="modal-header"><h5 class="modal-title" id="staffModalTitle">Add Staff</h5><button type="button" class="btn-close" id="closeStaffModal" aria-label="Close"></button></div>
+    <form id="staffForm"><div class="modal-body">
+        <div class="mb-3"><label for="staffMerchantId" class="form-label">Merchant</label><select class="form-select" id="staffMerchantId" required><option value="">Select merchant</option></select></div>
+        <div class="mb-3"><label for="staffName" class="form-label">Staff Name</label><input type="text" class="form-control" id="staffName" placeholder="Enter staff name" required /></div>
+        <div class="mb-3"><label for="staffType" class="form-label">Staff Type</label><select class="form-select" id="staffType" required><option value="Staff">Staff</option><option value="Manager">Manager</option><option value="Admin">Admin</option></select></div>
+        <div class="mb-3"><label for="staffPhone" class="form-label">Phone Number</label><input type="text" class="form-control" id="staffPhone" placeholder="Enter phone number" required /><small id="staffPhoneHint" class="form-text text-muted">Phone numbers must be unique.</small></div>
+        <div class="mb-3"><label for="staffPassword" class="form-label">Password</label><input type="password" class="form-control" id="staffPassword" placeholder="Enter password" required /><small class="form-text text-muted">Required when creating or saving changes.</small></div>
+        <div id="staffFormError" class="alert alert-danger" hidden></div>
+    </div><div class="modal-footer"><button type="button" class="btn btn-light" id="cancelStaffModal">Cancel</button><button type="submit" class="btn btn-dark" id="saveStaffButton">Create Staff</button></div></form>
+</div></div>
+
+@section Scripts {
+    <script src="~/js/staff.js" asp-append-version="true"></script>
+}

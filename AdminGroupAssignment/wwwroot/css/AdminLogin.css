@@ -1,0 +1,682 @@
+﻿
+/* =========================================================
+   ADMIN LOGIN PAGE
+   MONOCHROME LUXURY DESIGN
+========================================================= */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f2f2f0;
+    color: #1d1d1b;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.LoginPage {
+    min-height: 100vh;
+    display: flex;
+    background: #f2f2f0;
+}
+
+
+/* =========================================================
+   LEFT SIDE
+========================================================= */
+
+.LoginLeft {
+    width: 48%;
+    min-height: 100vh;
+    padding: 48px 58px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    background: #171716;
+    color: #ffffff;
+}
+
+
+    /* =========================================================
+   DECORATIVE CIRCLE
+========================================================= */
+
+    .LoginLeft::before {
+        content: "";
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        right: -260px;
+        bottom: -250px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+
+    .LoginLeft::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        right: 80px;
+        top: 150px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.BrandSection {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+
+.BrandIcon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #171716;
+    font-size: 21px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+
+.BrandSection h1 {
+    margin: 0;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+
+.BrandSection p {
+    margin: 3px 0 0;
+    color: #8d8d8a;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+}
+
+
+/* =========================================================
+   WELCOME
+========================================================= */
+
+.WelcomeSection {
+    position: relative;
+    z-index: 2;
+    max-width: 500px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
+.WelcomeLabel {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 7px 12px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #bcbcb8;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+
+.WelcomeSection h2 {
+    margin: 0;
+    font-size: clamp(40px, 4.2vw, 60px);
+    line-height: 1.04;
+    font-weight: 700;
+    letter-spacing: -2.5px;
+}
+
+
+.WelcomeSection p {
+    max-width: 410px;
+    margin: 25px 0 0;
+    color: #898987;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   LEFT BOTTOM
+========================================================= */
+
+.LeftBottom {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    color: #696966;
+    font-size: 10px;
+    letter-spacing: 0.2px;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+========================================================= */
+
+.LoginRight {
+    width: 52%;
+    min-height: 100vh;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f2f2f0;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+
+.LoginCard {
+    width: 100%;
+    max-width: 440px;
+    padding: 48px 44px;
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #dededb;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   LOGIN HEADER
+========================================================= */
+
+.LoginHeader {
+    margin-bottom: 32px;
+}
+
+
+    .LoginHeader h2 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 700;
+        color: #1c1c1a;
+        letter-spacing: -1px;
+    }
+
+
+    .LoginHeader p {
+        margin: 9px 0 0;
+        color: #898986;
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+   MOBILE LOGO
+========================================================= */
+
+.MobileLogo {
+    display: none;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 28px;
+}
+
+
+.MobileLogoIcon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #171716;
+    color: white;
+}
+
+
+.MobileLogo span {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1d1d1b;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.InputGroup {
+    margin-bottom: 21px;
+}
+
+
+    .InputGroup label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #3b3b39;
+    }
+
+
+/* =========================================================
+   INPUT WRAPPER
+========================================================= */
+
+.InputWrapper {
+    height: 51px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 11px;
+    border: 1px solid #dededb;
+    border-radius: 9px;
+    background: #fafaf9;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+    .InputWrapper:focus-within {
+        border-color: #333331;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+
+
+    .InputWrapper > i {
+        color: #777773;
+        font-size: 16px;
+    }
+
+
+    .InputWrapper input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #222220;
+        font-size: 13px;
+    }
+
+
+        .InputWrapper input::placeholder {
+            color: #aaa9a5;
+        }
+
+
+/* =========================================================
+   PASSWORD LABEL
+========================================================= */
+
+.PasswordLabel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+    .PasswordLabel label {
+        margin-bottom: 8px;
+    }
+
+
+/* =========================================================
+   PASSWORD BUTTON
+========================================================= */
+
+.PasswordToggle {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: #858581;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+
+    .PasswordToggle:hover {
+        color: #171716;
+    }
+
+
+/* =========================================================
+   PASSWORD HINT
+========================================================= */
+
+.PasswordHint {
+    display: block;
+    margin-top: 7px;
+    color: #9a9a96;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   REMEMBER
+========================================================= */
+
+.RememberRow {
+    margin-top: -3px;
+    margin-bottom: 24px;
+}
+
+
+.RememberLabel {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    margin: 0 !important;
+    color: #777773 !important;
+    font-size: 11px !important;
+    font-weight: 400 !important;
+    cursor: pointer;
+}
+
+
+    .RememberLabel input {
+        width: 15px;
+        height: 15px;
+        accent-color: #1d1d1b;
+        cursor: pointer;
+    }
+
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+.LoginButton {
+    width: 100%;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: none;
+    border-radius: 9px;
+    background: #171716;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+    .LoginButton i {
+        font-size: 16px;
+        transition: transform 0.2s ease;
+    }
+
+
+    .LoginButton:hover {
+        background: #30302e;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.16);
+    }
+
+
+        .LoginButton:hover i {
+            transform: translateX(4px);
+        }
+
+
+    .LoginButton:active {
+        transform: translateY(0);
+    }
+
+
+/* =========================================================
+   SECURITY NOTICE
+========================================================= */
+
+.SecurityNotice {
+    margin-top: 25px;
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 9px;
+    background: #f5f5f3;
+    border: 1px solid #e6e6e3;
+}
+
+
+    .SecurityNotice > i {
+        margin-top: 2px;
+        color: #555551;
+        font-size: 17px;
+    }
+
+
+    .SecurityNotice strong {
+        display: block;
+        color: #4a4a47;
+        font-size: 10px;
+    }
+
+
+    .SecurityNotice span {
+        display: block;
+        margin-top: 3px;
+        color: #969692;
+        font-size: 9px;
+        line-height: 1.4;
+    }
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.alert-danger {
+    background: #f4f4f2 !important;
+    border: 1px solid #d5d5d1 !important;
+    color: #333330 !important;
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   DEBUG MESSAGE
+========================================================= */
+
+.alert-info {
+    background: #f4f4f2 !important;
+    border: 1px solid #d5d5d1 !important;
+    color: #444440 !important;
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+
+    .LoginLeft {
+        width: 43%;
+        padding: 40px;
+    }
+
+
+    .LoginRight {
+        width: 57%;
+        padding: 30px;
+    }
+
+
+    .WelcomeSection h2 {
+        font-size: 42px;
+    }
+
+
+    .LoginCard {
+        padding: 38px 32px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .LoginPage {
+        display: block;
+    }
+
+
+    .LoginLeft {
+        display: none;
+    }
+
+
+    .LoginRight {
+        width: 100%;
+        min-height: 100vh;
+        padding: 20px 16px;
+    }
+
+
+    .LoginCard {
+        max-width: 450px;
+        padding: 35px 25px;
+        border-radius: 13px;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.07);
+    }
+
+
+    .MobileLogo {
+        display: flex;
+    }
+
+
+    .LoginHeader h2 {
+        font-size: 27px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .LoginRight {
+        padding: 15px 12px;
+    }
+
+
+    .LoginCard {
+        padding: 30px 20px;
+    }
+
+
+    .LoginHeader h2 {
+        font-size: 25px;
+    }
+
+
+    .LoginHeader p {
+        font-size: 12px;
+    }
+
+
+    .InputWrapper {
+        height: 49px;
+    }
+
+
+    .LoginButton {
+        height: 50px;
+    }
+}
+
+/* =========================================================
+   2026 VISUAL REFRESH — INDIGO CONTROL CENTER
+   CSS-only redesign; form behaviour remains unchanged.
+========================================================= */
+body { background: #f5f5fb; color: #1a1b2e; font-family: Aptos, "Segoe UI Variable", "Segoe UI", sans-serif; }
+.LoginPage { background: #f5f5fb; }
+.LoginLeft {
+    width: 52%;
+    padding: 48px 60px;
+    background:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+        radial-gradient(circle at 70% 25%, rgba(128,108,255,.38), transparent 18rem),
+        linear-gradient(145deg, #1d1f40 0%, #111326 72%);
+    background-size: 42px 42px, 42px 42px, auto, auto;
+}
+.LoginLeft::before { width: 560px; height: 560px; right: -250px; bottom: -270px; border-color: rgba(174,163,255,.18); }
+.LoginLeft::after { width: 240px; height: 240px; right: 14%; top: 18%; border-color: rgba(255,255,255,.10); box-shadow: 0 0 80px rgba(108,93,255,.12); }
+.BrandIcon { border: 1px solid rgba(255,255,255,.18); border-radius: 15px; color: #fff; background: linear-gradient(145deg,#8174ff,#5b5bd6); box-shadow: 0 14px 35px rgba(76,63,202,.35); }
+.BrandSection h1 { letter-spacing: -.7px; }
+.BrandSection p { color: #aaa5dd; }
+.WelcomeLabel { border: 1px solid rgba(175,164,255,.17); border-radius: 999px; color: #c4bfff; background: rgba(126,112,255,.13); }
+.WelcomeSection h2 { max-width: 580px; font-size: clamp(44px,4.6vw,66px); letter-spacing: -3px; }
+.WelcomeSection p { color: #a6a7bd; }
+.LeftBottom { color: #777991; }
+.LoginRight { width: 48%; background: radial-gradient(circle at 85% 10%,rgba(119,105,255,.10),transparent 18rem),#f5f5fb; }
+.LoginCard { max-width: 456px; padding: 50px 46px; border: 1px solid #e3e3ed; border-radius: 22px; box-shadow: 0 28px 80px rgba(30,31,72,.11); }
+.LoginHeader h2 { color: #1b1c30; font-size: 32px; letter-spacing: -1.4px; }
+.LoginHeader p { color: #888a9c; }
+.InputGroup label { color: #3c3e53; }
+.InputWrapper { height: 54px; border-color: #dedeea; border-radius: 13px; background: #f9f9fc; }
+.InputWrapper:focus-within { border-color: #6c6cd8; box-shadow: 0 0 0 4px rgba(91,91,214,.10); }
+.InputWrapper > i { color: #7375a0; }
+.RememberLabel input { accent-color: #5b5bd6; }
+.LoginButton { height: 54px; border-radius: 13px; background: linear-gradient(135deg,#6868e4,#5151c7); box-shadow: 0 12px 28px rgba(75,75,190,.26); }
+.LoginButton:hover { background: linear-gradient(135deg,#5c5cd6,#4545b7); box-shadow: 0 16px 32px rgba(75,75,190,.32); }
+.SecurityNotice { border-color: #e5e4f0; border-radius: 12px; background: #f7f7fc; }
+.SecurityNotice > i { color: #5b5bd6; }
+.MobileLogoIcon { border-radius: 11px; background: linear-gradient(145deg,#7165ee,#5252c6); }
+
+@media (max-width: 992px) {
+    .LoginLeft { width: 45%; padding: 40px; }
+    .LoginRight { width: 55%; }
+}
+
+@media (max-width: 768px) {
+    .LoginRight { width: 100%; background: radial-gradient(circle at 80% 0,rgba(119,105,255,.14),transparent 20rem),#f5f5fb; }
+    .LoginCard { border-radius: 20px; box-shadow: 0 20px 60px rgba(30,31,72,.10); }
+}
+

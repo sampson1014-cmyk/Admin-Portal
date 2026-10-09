@@ -1,0 +1,145 @@
+﻿/* =====================================================
+   MERCHANT MANAGEMENT PAGE
+===================================================== */
+
+.merchant-page {
+    padding: 30px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.merchant-header {
+    margin-bottom: 30px;
+}
+
+    .merchant-header h1 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 700;
+        color: #171716;
+    }
+
+    .merchant-header p {
+        margin-top: 7px;
+        margin-bottom: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+
+/* =====================================================
+   CATEGORY GRID
+===================================================== */
+
+.merchant-category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+
+/* =====================================================
+   CATEGORY CARD
+===================================================== */
+
+.merchant-category {
+    min-height: 190px;
+    padding: 25px;
+    background: #ffffff;
+    border: 1px solid #e8e8e5;
+    border-radius: 18px;
+    text-decoration: none;
+    color: #171716;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+    .merchant-category:hover {
+        color: #171716;
+        transform: translateY(-3px);
+        border-color: #d5d5d0;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .07);
+    }
+
+
+/* =====================================================
+   ICON
+===================================================== */
+
+.merchant-category-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    background: #f2f2f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+}
+
+    .merchant-category-icon i {
+        font-size: 21px;
+        color: #171716;
+    }
+
+
+/* =====================================================
+   TEXT
+===================================================== */
+
+.merchant-category h3 {
+    margin: 0 0 7px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.merchant-category p {
+    margin: 0;
+    color: #858581;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   BOTTOM
+===================================================== */
+
+.merchant-category-bottom {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #777;
+    font-size: 13px;
+}
+
+    .merchant-category-bottom i {
+        transition: transform .2s ease;
+    }
+
+.merchant-category:hover
+.merchant-category-bottom i {
+    transform: translateX(4px);
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .merchant-page {
+        padding: 20px;
+    }
+
+    .merchant-category-grid {
+        grid-template-columns: 1fr;
+    }
+}

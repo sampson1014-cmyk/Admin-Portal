@@ -1,0 +1,108 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Transactions";
+    ViewData["Subtitle"] = "Review all wallet and loyalty activity returned by the API.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/transactions.css" asp-append-version="true" />
+}
+
+<div class="transactions-page">
+    <section class="transactions-heading">
+        <div>
+            <h2>Transaction Records</h2>
+            <p>Search, filter and inspect transaction history across every loyalty activity.</p>
+        </div>
+        <button type="button" id="refreshTransactions" class="transaction-button transaction-refresh" aria-label="Refresh transaction records">
+            <i class="bi bi-arrow-clockwise" aria-hidden="true"></i><span>Refresh</span>
+        </button>
+    </section>
+
+    <div class="transaction-readonly-note">
+        <i class="bi bi-shield-check" aria-hidden="true"></i>
+        <span>Transaction records are read-only. Incorrect purchases and top-ups must be reversed using the matching POS void function so the audit history remains complete.</span>
+    </div>
+
+    <div id="transactionMessage" class="transaction-message" role="alert" hidden></div>
+
+    <section class="transaction-summary" aria-label="Transaction summary">
+        <article><span>Total records</span><strong id="transactionTotal">0</strong></article>
+        <article><span>Successful</span><strong id="transactionCompleted">0</strong></article>
+        <article><span id="transactionValueLabel">Total amount</span><strong id="transactionValue">0.00</strong></article>
+        <article><span>Members</span><strong id="transactionMembers">0</strong></article>
+    </section>
+
+    <nav class="transaction-tabs" id="transactionTabs" aria-label="Transaction type" role="tablist">
+        <button type="button" class="active" data-type="topups" role="tab" aria-selected="true"><i class="bi bi-wallet2"></i> Top-ups</button>
+        <button type="button" data-type="spends" role="tab" aria-selected="false"><i class="bi bi-receipt"></i> Spends</button>
+        <button type="button" data-type="rewards" role="tab" aria-selected="false"><i class="bi bi-gift"></i> Rewards</button>
+        <button type="button" data-type="vouchers" role="tab" aria-selected="false"><i class="bi bi-ticket-perforated"></i> Vouchers</button>
+        <button type="button" data-type="stamps" role="tab" aria-selected="false"><i class="bi bi-award"></i> Stamps</button>
+        <button type="button" data-type="stampassigns" role="tab" aria-selected="false"><i class="bi bi-plus-circle"></i> Stamp Assignments</button>
+        <button type="button" data-type="stamptransactions" role="tab" aria-selected="false"><i class="bi bi-arrow-left-right"></i> Stamp Activity</button>
+        <button type="button" data-type="points" role="tab" aria-selected="false"><i class="bi bi-stars"></i> Points</button>
+    </nav>
+
+    <section class="transaction-card">
+        <div class="transaction-toolbar">
+            <div>
+                <h3 id="transactionListTitle">Top-up Records</h3>
+                <p id="transactionResultText" aria-live="polite">Loading records...</p>
+            </div>
+            <button type="button" id="exportTransactions" class="transaction-button" disabled>
+                <i class="bi bi-download" aria-hidden="true"></i> Export CSV
+            </button>
+        </div>
+
+        <div class="transaction-filters" aria-label="Transaction filters">
+            <label class="transaction-search" for="transactionSearch">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <input id="transactionSearch" type="search" placeholder="Search member, reference or description" />
+            </label>
+            <label><span>Status</span><select id="transactionStatusFilter"><option value="">All statuses</option></select></label>
+            <label>
+                <span>Sort</span>
+                <select id="transactionSort">
+                    <option value="date-desc">Newest first</option>
+                    <option value="date-asc">Oldest first</option>
+                    <option value="value-desc">Highest value</option>
+                    <option value="value-asc">Lowest value</option>
+                </select>
+            </label>
+        </div>
+
+        <div id="transactionLoading" class="transaction-state">
+            <div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading</span></div>
+            <p>Loading transaction records...</p>
+        </div>
+        <div id="transactionEmpty" class="transaction-state" hidden>
+            <i class="bi bi-inbox" aria-hidden="true"></i>
+            <h4 id="transactionEmptyTitle">No records</h4>
+            <p id="transactionEmptyText">No transaction records were found.</p>
+            <button type="button" id="retryTransactions" class="transaction-button" hidden>Try again</button>
+        </div>
+        <div id="transactionTableWrapper" class="table-responsive" hidden>
+            <table class="transaction-table">
+                <thead><tr><th>Date</th><th>Reference</th><th>Member</th><th>Description</th><th id="transactionValueHeading">Amount</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+                <tbody id="transactionTableBody"></tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="transactionDetailsModal" tabindex="-1" aria-labelledby="transactionDetailsTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content transaction-details-modal">
+            <div class="modal-header">
+                <div><p class="transaction-modal-eyebrow">Transaction details</p><h2 class="modal-title fs-5" id="transactionDetailsTitle">Record</h2></div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"><dl id="transactionDetails" class="transaction-details"></dl></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/transactions.js" asp-append-version="true"></script>
+}

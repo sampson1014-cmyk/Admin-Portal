@@ -1,0 +1,60 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Orders";
+    ViewData["Subtitle"] = "Review delivery orders and their current status.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true" />
+}
+
+<div class="orders-page">
+    <section class="orders-heading">
+        <div><h2>Delivery Orders</h2><p>Track every order returned by the delivery API.</p></div>
+        <button type="button" id="refreshOrders" class="order-button order-refresh" aria-label="Refresh orders">
+            <i class="bi bi-arrow-clockwise" aria-hidden="true"></i><span>Refresh</span>
+        </button>
+    </section>
+
+    <div id="orderMessage" class="order-message" role="alert" hidden></div>
+
+    <section class="order-summary" aria-label="Order summary">
+        <article><span>Total orders</span><strong id="orderTotal">0</strong></article>
+        <article><span>Pending</span><strong id="orderPending">0</strong></article>
+        <article><span>Completed</span><strong id="orderCompleted">0</strong></article>
+        <article><span>Total value</span><strong id="orderValue">RM 0.00</strong></article>
+    </section>
+
+    <section class="order-card">
+        <div class="order-toolbar">
+            <div><h3>Order History</h3><p id="orderResultText" aria-live="polite">Loading orders...</p></div>
+            <button type="button" id="exportOrders" class="order-button" disabled><i class="bi bi-download"></i> Export CSV</button>
+        </div>
+
+        <div class="order-filters">
+            <label class="order-search" for="orderSearch"><i class="bi bi-search"></i><input id="orderSearch" type="search" placeholder="Search order, member, phone or address" /></label>
+            <label><span>Status</span><select id="orderStatus"><option value="">All statuses</option></select></label>
+            <label><span>Sort</span><select id="orderSort"><option value="date-desc">Newest first</option><option value="date-asc">Oldest first</option><option value="value-desc">Highest value</option><option value="value-asc">Lowest value</option></select></label>
+        </div>
+
+        <div id="orderLoading" class="order-state"><div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading</span></div><p>Loading delivery orders...</p></div>
+        <div id="orderEmpty" class="order-state" hidden><i class="bi bi-bag-x"></i><h4 id="orderEmptyTitle">No delivery orders yet</h4><p id="orderEmptyText">The Orders API is connected and returned 0 records. New delivery bookings will appear here.</p><button type="button" id="retryOrders" class="order-button" hidden>Try again</button></div>
+        <div id="orderTableWrapper" class="table-responsive" hidden>
+            <table class="order-table">
+                <thead><tr><th>Order</th><th>Date</th><th>Member</th><th>Delivery address</th><th>Amount</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+                <tbody id="orderTableBody"></tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content order-details-modal">
+        <div class="modal-header"><div><p class="order-modal-eyebrow">Order details</p><h2 class="modal-title fs-5" id="orderDetailsTitle">Order</h2></div><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+        <div class="modal-body"><dl id="orderDetails" class="order-details"></dl></div>
+    </div></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/orders.js" asp-append-version="true"></script>
+}

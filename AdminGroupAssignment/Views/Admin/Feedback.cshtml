@@ -1,0 +1,76 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Feedback";
+    ViewData["Subtitle"] = "Review ratings and comments submitted by members.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/feedback.css" asp-append-version="true" />
+}
+
+<div class="feedback-page">
+    <section class="feedback-heading">
+        <div><h2>Member Feedback</h2><p>Understand what members like and where service can improve.</p></div>
+        <button type="button" id="refreshFeedback" class="feedback-button feedback-refresh" aria-label="Refresh feedback"><i class="bi bi-arrow-clockwise"></i><span>Refresh</span></button>
+    </section>
+
+    <div id="feedbackMessage" class="feedback-message" role="alert" hidden></div>
+
+    <section class="feedback-summary" aria-label="Feedback summary">
+        <article><div class="feedback-summary-icon total"><i class="bi bi-chat-square-heart"></i></div><div><span>Total feedback</span><strong id="feedbackTotal">0</strong><small>Member responses</small></div></article>
+        <article><div class="feedback-summary-icon average"><i class="bi bi-star"></i></div><div><span>Average rating</span><strong id="feedbackAverage">0.0</strong><small>Out of 5 stars</small></div></article>
+        <article><div class="feedback-summary-icon excellent"><i class="bi bi-emoji-smile"></i></div><div><span>Five-star reviews</span><strong id="feedbackFiveStar">0</strong><small>Excellent experiences</small></div></article>
+        <article><div class="feedback-summary-icon categories"><i class="bi bi-tags"></i></div><div><span>Categories</span><strong id="feedbackCategories">0</strong><small>Feedback topics</small></div></article>
+    </section>
+
+    <section class="feedback-ratings" aria-labelledby="feedbackRatingsTitle">
+        <div class="feedback-ratings-heading"><div><h3 id="feedbackRatingsTitle">Rating overview</h3><p>See customer satisfaction at a glance. Click a row to filter the list.</p></div></div>
+        <div class="feedback-ratings-content">
+            <div class="feedback-rating-score"><strong id="feedbackAverageInline">0.0</strong><span id="feedbackAverageStars" aria-hidden="true"></span><small>Average from <b id="feedbackRatingCount">0</b> ratings</small></div>
+            <div id="feedbackRatingBreakdown" class="feedback-rating-breakdown"></div>
+        </div>
+    </section>
+
+    <section class="feedback-card">
+        <div class="feedback-toolbar">
+            <div><h3>Feedback List</h3><p id="feedbackResultText" aria-live="polite">Loading feedback...</p></div>
+            <button type="button" id="exportFeedback" class="feedback-button" disabled><i class="bi bi-download"></i> Export CSV</button>
+        </div>
+
+        <div class="feedback-filters">
+            <label class="feedback-search" for="feedbackSearch"><i class="bi bi-search"></i><input id="feedbackSearch" type="search" placeholder="Search title, message, user or location" /></label>
+            <label><span>Category</span><select id="feedbackCategory"><option value="">All categories</option></select></label>
+            <label><span>Rating</span><select id="feedbackRating"><option value="">All ratings</option><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></label>
+            <label><span>Sort</span><select id="feedbackSort"><option value="id-desc">Newest first</option><option value="rating-desc">Highest rating</option><option value="rating-asc">Lowest rating</option><option value="title-asc">Title A-Z</option></select></label>
+        </div>
+
+        <div id="feedbackLoading" class="feedback-state"><div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading</span></div><p>Loading member feedback...</p></div>
+        <div id="feedbackError" class="feedback-state" hidden><i class="bi bi-exclamation-circle"></i><h4 id="feedbackErrorTitle">Feedback not loaded</h4><p id="feedbackErrorText"></p><button type="button" id="retryFeedback" class="feedback-button">Try again</button></div>
+        <div id="feedbackTableWrapper" class="table-responsive" hidden>
+            <table class="feedback-table">
+                <thead><tr><th>ID</th><th>Feedback</th><th>Category</th><th>Member</th><th>Location</th><th>Rating</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+                <tbody id="feedbackTableBody"></tbody>
+            </table>
+        </div>
+        <footer id="feedbackPagination" class="feedback-pagination" hidden>
+            <label>Rows per page <select id="feedbackPageSize"><option value="10">10</option><option value="25">25</option><option value="50">50</option></select></label>
+            <span id="feedbackPageText">Page 1 of 1</span>
+            <div><button type="button" id="feedbackPrevious" aria-label="Previous page"><i class="bi bi-chevron-left"></i></button><button type="button" id="feedbackNext" aria-label="Next page"><i class="bi bi-chevron-right"></i></button></div>
+        </footer>
+    </section>
+</div>
+
+<div class="modal fade" id="feedbackDetailsModal" tabindex="-1" aria-labelledby="feedbackDetailsTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content feedback-details-modal">
+        <div class="modal-header"><div><p class="feedback-modal-eyebrow" id="feedbackDetailsCategory">Feedback</p><h2 class="modal-title fs-5" id="feedbackDetailsTitle">Feedback details</h2></div><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+        <div class="modal-body">
+            <div id="feedbackDetailsRating" class="feedback-detail-rating"></div>
+            <p id="feedbackDetailsDescription" class="feedback-detail-description"></p>
+            <dl class="feedback-details-meta"><div><dt>Feedback ID</dt><dd id="feedbackDetailsId">-</dd></div><div><dt>Member ID</dt><dd id="feedbackDetailsUser">-</dd></div><div><dt>Location</dt><dd id="feedbackDetailsLocation">-</dd></div></dl>
+        </div>
+    </div></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/feedback.js" asp-append-version="true"></script>
+}

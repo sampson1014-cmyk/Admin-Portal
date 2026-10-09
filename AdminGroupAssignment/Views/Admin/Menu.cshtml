@@ -1,0 +1,66 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Menu";
+    ViewData["Subtitle"] = "Manage menu items, prices, availability, and add-ons.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/menu.css" asp-append-version="true" />
+}
+
+<div class="menu-page">
+    <section class="menu-page-head">
+        <div><h2>Menu Items</h2><p>Manage products available in the member app and POS.</p></div>
+        <div class="menu-head-actions">
+            <button type="button" class="menu-btn secondary" id="refreshMenu"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+            <button type="button" class="menu-btn primary" id="addMenuButton"><i class="bi bi-plus-lg"></i> Add Item</button>
+        </div>
+    </section>
+
+    <div id="menuMessage" class="menu-message" hidden></div>
+
+    <section class="menu-stats">
+        <article><span>Total Items</span><strong id="totalMenuItems">0</strong></article>
+        <article><span>Active</span><strong id="activeMenuItems">0</strong></article>
+        <article><span>Categories</span><strong id="menuCategoryCount">0</strong></article>
+        <article><span>Delivery</span><strong id="deliveryMenuItems">0</strong></article>
+    </section>
+
+    <section class="menu-filters">
+        <div class="menu-search"><i class="bi bi-search"></i><input id="menuSearch" type="text" placeholder="Search menu items..." /></div>
+        <select id="menuCategoryFilter"><option value="">All Categories</option></select>
+        <select id="menuStatusFilter"><option value="">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option></select>
+        <button type="button" id="clearMenuFilters">Clear</button>
+    </section>
+
+    <section class="menu-content-card">
+        <div class="menu-content-head"><div><h3>Product List</h3><p id="menuResultText"></p></div></div>
+        <div id="menuLoading" class="menu-state"><div class="spinner-border spinner-border-sm"></div><p>Loading menu items...</p></div>
+        <div id="menuState" class="menu-state" hidden><i class="bi bi-cup-hot"></i><h4 id="menuStateTitle">No Items</h4><p id="menuStateText">No menu items were found.</p></div>
+        <div id="menuGrid" class="menu-grid" hidden></div>
+    </section>
+</div>
+
+<div id="menuModal" class="menu-dialog-overlay" hidden><div class="menu-dialog-card" role="dialog" aria-modal="true" aria-labelledby="menuModalTitle">
+    <div class="menu-dialog-head"><h3 id="menuModalTitle">Add Menu Item</h3><button type="button" id="closeMenuModal" class="btn-close" aria-label="Close"></button></div>
+    <form id="menuForm"><div class="menu-dialog-body">
+        <input type="hidden" id="menuId" />
+        <div class="menu-form-grid">
+            <div class="wide"><label for="menuItemName">Item Name</label><input class="form-control" id="menuItemName" required /></div>
+            <div class="wide"><label for="menuDescription">Description</label><textarea class="form-control" id="menuDescription" rows="3"></textarea></div>
+            <div><label for="menuPrice">Price (RM)</label><input class="form-control" id="menuPrice" type="number" min="0" step="0.01" required /></div>
+            <div><label for="menuQty">Quantity</label><input class="form-control" id="menuQty" type="number" min="0" step="1" value="0" required /></div>
+            <div><label for="menuCategory">Category</label><input class="form-control" id="menuCategory" required /></div>
+            <div><label for="menuStatus">Status</label><select class="form-select" id="menuStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
+            <div class="wide"><label for="menuImage">Image URL</label><input class="form-control" id="menuImage" type="url" /></div>
+            <label class="menu-check"><input type="checkbox" id="menuDelivery" /> Delivery Allowed</label>
+            <label class="menu-check"><input type="checkbox" id="menuSpicy" /> Spicy Item</label>
+            <div class="wide"><label for="menuSubItems">Sub Menu / Add-ons JSON</label><textarea class="form-control" id="menuSubItems" rows="3" placeholder="[]"></textarea></div>
+        </div>
+        <div id="menuFormError" class="alert alert-danger mt-3" hidden></div>
+    </div><div class="menu-dialog-footer"><button type="button" class="btn btn-light" id="cancelMenuModal">Cancel</button><button type="submit" class="btn btn-dark" id="saveMenuButton">Create Item</button></div></form>
+</div></div>
+
+@section Scripts {
+    <script src="~/js/menu.js" asp-append-version="true"></script>
+}

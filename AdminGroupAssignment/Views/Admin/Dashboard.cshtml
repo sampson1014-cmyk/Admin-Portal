@@ -1,0 +1,87 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Dashboard";
+    ViewData["Subtitle"] = "A clear overview of customers, operations, and activity.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+
+@section HeaderActions {
+    <button class="dashboard-refresh" id="refreshBtn" type="button">
+        <i class="bi bi-arrow-clockwise"></i><span>Refresh</span>
+    </button>
+}
+
+<div class="dash" data-endpoint="@Url.Action("DashboardData", "Admin")" data-login="@Url.Action("LoginPage", "Admin")">
+    <section class="dashboard-status" aria-live="polite">
+        <div class="dashboard-connection"><span id="statusDot" class="status-dot"></span><strong id="statusText">Loading dashboard</strong></div>
+        <span class="dashboard-updated">Last updated <strong id="lastUpdated">—</strong></span>
+    </section>
+
+    <section id="errorBox" class="dashboard-alert" hidden>
+        <i class="bi bi-exclamation-triangle"></i>
+        <div><strong>Some data could not be loaded</strong><ul id="errorList"></ul></div>
+    </section>
+
+    <section class="dashboard-kpis" aria-label="Key statistics">
+        <a class="dashboard-kpi kpi-members" asp-controller="Admin" asp-action="Members"><span class="kpi-icon"><i class="bi bi-people"></i></span><span class="kpi-copy"><small>Total members</small><strong data-value="Members">—</strong><em>Registered customers</em></span><i class="bi bi-arrow-up-right kpi-arrow"></i></a>
+        <a class="dashboard-kpi kpi-merchants" asp-controller="Admin" asp-action="MerchantList"><span class="kpi-icon"><i class="bi bi-shop"></i></span><span class="kpi-copy"><small>Merchants</small><strong data-value="Merchants">—</strong><em>Merchant accounts</em></span><i class="bi bi-arrow-up-right kpi-arrow"></i></a>
+        <a class="dashboard-kpi kpi-orders" asp-controller="Admin" asp-action="Orders"><span class="kpi-icon"><i class="bi bi-bag-check"></i></span><span class="kpi-copy"><small>Orders</small><strong data-value="Orders">—</strong><em>Delivery records</em></span><i class="bi bi-arrow-up-right kpi-arrow"></i></a>
+        <a class="dashboard-kpi kpi-activity" asp-controller="Admin" asp-action="Transactions"><span class="kpi-icon"><i class="bi bi-receipt"></i></span><span class="kpi-copy"><small>Transactions</small><strong id="transactionKpi">—</strong><em>All activity records</em></span><i class="bi bi-arrow-up-right kpi-arrow"></i></a>
+    </section>
+
+    <section class="dashboard-layout">
+        <article class="dashboard-card dashboard-business-card">
+            <header class="dashboard-card-head"><div><span class="dashboard-eyebrow">BUSINESS</span><h2>Business overview</h2><p>Relative size of the main records in your portal.</p></div><span class="dashboard-card-icon"><i class="bi bi-bar-chart"></i></span></header>
+            <div class="dashboard-bars" id="businessChart">
+                <div class="chart-row" data-chart-key="Members"><div class="chart-label"><span>Members</span><strong data-value="Members">—</strong></div><div class="chart-track"><i></i></div></div>
+                <div class="chart-row" data-chart-key="Merchants"><div class="chart-label"><span>Merchants</span><strong data-value="Merchants">—</strong></div><div class="chart-track"><i></i></div></div>
+                <div class="chart-row" data-chart-key="Outlets"><div class="chart-label"><span>Outlets</span><strong data-value="Outlets">—</strong></div><div class="chart-track"><i></i></div></div>
+                <div class="chart-row" data-chart-key="Staff"><div class="chart-label"><span>Staff</span><strong data-value="Staff">—</strong></div><div class="chart-track"><i></i></div></div>
+                <div class="chart-row" data-chart-key="MenuItems"><div class="chart-label"><span>Menu items</span><strong data-value="MenuItems">—</strong></div><div class="chart-track"><i></i></div></div>
+            </div>
+        </article>
+
+        <article class="dashboard-card dashboard-transaction-card">
+            <header class="dashboard-card-head"><div><span class="dashboard-eyebrow">ACTIVITY</span><h2>Transaction mix</h2><p>Distribution across transaction APIs.</p></div></header>
+            <div class="donut-layout">
+                <div class="transaction-donut" id="transactionDonut" role="img" aria-label="Transaction distribution chart"><div><strong id="transactionTotal">—</strong><span>Total</span></div></div>
+                <div class="donut-legend">
+                    <div data-legend-key="TopUps"><i></i><span>Top ups</span><strong data-value="TopUps">—</strong></div>
+                    <div data-legend-key="Spends"><i></i><span>Spends</span><strong data-value="Spends">—</strong></div>
+                    <div data-legend-key="RewardRedemptions"><i></i><span>Rewards</span><strong data-value="RewardRedemptions">—</strong></div>
+                    <div data-legend-key="Vouchers"><i></i><span>Vouchers</span><strong data-value="Vouchers">—</strong></div>
+                    <div data-legend-key="StampRecords"><i></i><span>Stamps</span><strong data-value="StampRecords">—</strong></div>
+                    <div data-legend-key="PointAssigns"><i></i><span>Points</span><strong data-value="PointAssigns">—</strong></div>
+                </div>
+            </div>
+        </article>
+
+        <article class="dashboard-card dashboard-content-card">
+            <header class="dashboard-card-head"><div><span class="dashboard-eyebrow">CONTENT</span><h2>Content & engagement</h2><p>Records currently available to members.</p></div></header>
+            <div class="content-metrics">
+                <a asp-controller="Admin" asp-action="Feedback"><span><i class="bi bi-chat-square-text"></i>Feedback</span><strong data-value="Feedback">—</strong></a>
+                <a asp-controller="Admin" asp-action="Rewards"><span><i class="bi bi-gift"></i>Rewards</span><strong data-value="Rewards">—</strong></a>
+                <a asp-controller="Admin" asp-action="StampCampaigns"><span><i class="bi bi-postage"></i>Stamp campaigns</span><strong data-value="StampCampaigns">—</strong></a>
+                <a asp-controller="Admin" asp-action="Banners"><span><i class="bi bi-images"></i>Banners</span><strong data-value="Banners">—</strong></a>
+                <a asp-controller="Admin" asp-action="AppVersions"><span><i class="bi bi-phone"></i>App versions</span><strong data-value="AppVersions">—</strong></a>
+            </div>
+        </article>
+
+        <article class="dashboard-card dashboard-actions-card">
+            <header class="dashboard-card-head"><div><span class="dashboard-eyebrow">SHORTCUTS</span><h2>Quick actions</h2><p>Go directly to common management tasks.</p></div></header>
+            <div class="quick-actions">
+                <a asp-controller="Admin" asp-action="Members"><i class="bi bi-person-plus"></i><span><strong>Members</strong><small>Manage accounts</small></span><i class="bi bi-chevron-right"></i></a>
+                <a asp-controller="Admin" asp-action="Menu"><i class="bi bi-menu-button-wide"></i><span><strong>Menu</strong><small>Update products</small></span><i class="bi bi-chevron-right"></i></a>
+                <a asp-controller="Admin" asp-action="Rewards"><i class="bi bi-gift"></i><span><strong>Rewards</strong><small>Manage catalogue</small></span><i class="bi bi-chevron-right"></i></a>
+                <a asp-controller="Admin" asp-action="Notifications"><i class="bi bi-send"></i><span><strong>Notifications</strong><small>Send an update</small></span><i class="bi bi-chevron-right"></i></a>
+            </div>
+        </article>
+    </section>
+</div>
+
+@section Scripts {
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}

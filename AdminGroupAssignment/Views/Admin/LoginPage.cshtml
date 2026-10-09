@@ -1,0 +1,490 @@
+﻿@{
+    Layout = null;
+}
+
+@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>Admin Login - EduvoShop</title>
+
+
+    <!-- =========================
+         BOOTSTRAP
+    ========================== -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+
+    <!-- =========================
+         BOOTSTRAP ICONS
+    ========================== -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+
+    <!-- =========================
+         LOGIN CSS
+    ========================== -->
+
+    <link rel="stylesheet"
+          href="~/css/AdminLogin.css"
+          asp-append-version="true" />
+
+</head>
+
+
+<body>
+
+
+    <div class="LoginPage">
+
+
+        <!-- ==================================================
+             LEFT SIDE
+        =================================================== -->
+
+        <div class="LoginLeft">
+
+
+            <!-- =========================
+                 BRAND
+            ========================== -->
+
+            <div class="BrandSection">
+
+
+                <div class="BrandIcon">
+
+                    <i class="bi bi-shop"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h1>
+                        EduvoShop
+                    </h1>
+
+                    <p>
+                        ADMIN PANEL
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =========================
+                 WELCOME
+            ========================== -->
+
+            <div class="WelcomeSection">
+
+
+                <span class="WelcomeLabel">
+
+                    ADMINISTRATION
+
+                </span>
+
+
+                <h2>
+
+                    Manage your<br />
+
+                    store with ease.
+
+                </h2>
+
+
+                <p>
+
+                    Manage users, sellers, products and
+                    transactions from one place.
+
+                </p>
+
+
+            </div>
+
+
+            <!-- =========================
+                 BOTTOM
+            ========================== -->
+
+            <div class="LeftBottom">
+
+
+                <span>
+
+                    © @DateTime.Now.Year EduvoShop
+
+                </span>
+
+
+                <span>
+
+                    Admin Management System
+
+                </span>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ==================================================
+             RIGHT SIDE
+        =================================================== -->
+
+        <div class="LoginRight">
+
+
+            <div class="LoginCard">
+
+
+                <!-- =========================
+                     HEADER
+                ========================== -->
+
+                <div class="LoginHeader">
+
+
+                    <!-- =========================
+                         MOBILE LOGO
+                    ========================== -->
+
+                    <div class="MobileLogo">
+
+
+                        <div class="MobileLogoIcon">
+
+                            <i class="bi bi-shop"></i>
+
+                        </div>
+
+
+                        <span>
+
+                            EduvoShop
+
+                        </span>
+
+
+                    </div>
+
+
+                    <!-- =========================
+                         TITLE
+                    ========================== -->
+
+                    <h2>
+
+                        Welcome Back
+
+                    </h2>
+
+
+                    <p>
+
+                        Sign in to your administrator account
+
+                    </p>
+
+
+                </div>
+
+
+                <!-- ==================================================
+                     ERROR MESSAGE
+                =================================================== -->
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger"
+                         style="font-size: 14px;">
+
+                        @Html.Raw(ViewBag.Error)
+
+                    </div>
+                }
+
+
+                <!-- ==================================================
+                     DEBUG MESSAGE
+                =================================================== -->
+                @if (ViewBag.TokenDebug != null)
+                {
+                    <div class="alert alert-info"
+                         style="font-size: 14px;">
+
+                        @Html.Raw(ViewBag.TokenDebug)
+
+                    </div>
+                }
+
+
+                <!-- ==================================================
+                     LOGIN FORM
+                =================================================== -->
+
+                <form asp-controller="Admin"
+                      asp-action="LoginPage"
+                      method="post"
+                      class="LoginForm">
+
+
+                    <!-- ==================================================
+                         USERNAME
+                    =================================================== -->
+
+                    <div class="InputGroup">
+
+
+                        <label for="Username">
+
+                            Username
+
+                        </label>
+
+
+                        <div class="InputWrapper">
+
+
+                            <i class="bi bi-person"></i>
+
+
+                            <input type="text"
+                                   id="Username"
+                                   name="Username"
+                                   placeholder="Enter your username"
+                                   autocomplete="username"
+                                   required />
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ==================================================
+                         PASSWORD
+                    =================================================== -->
+
+                    <div class="InputGroup">
+
+
+                        <div class="PasswordLabel">
+
+
+                            <label for="Password">
+
+                                Password
+
+                            </label>
+
+
+                        </div>
+
+
+                        <div class="InputWrapper">
+
+
+                            <i class="bi bi-lock"></i>
+
+
+                            <input type="password"
+                                   id="Password"
+                                   name="Password"
+                                   placeholder="Enter your password"
+                                   autocomplete="current-password"
+                                   required />
+
+
+                            <!-- =========================
+                                 PASSWORD TOGGLE
+                            ========================== -->
+
+                            <button type="button"
+                                    class="PasswordToggle"
+                                    onclick="TogglePassword()">
+
+
+                                <i id="PasswordIcon"
+                                   class="bi bi-eye">
+                                </i>
+
+
+                            </button>
+
+
+                        </div>
+
+
+                        <!-- =========================
+                             PASSWORD HINT
+                        ========================== -->
+
+                        <small class="PasswordHint">
+
+                            Enter your administrator password.
+
+                        </small>
+
+
+                    </div>
+
+
+                    <!-- ==================================================
+                         REMEMBER ME
+                    =================================================== -->
+
+                    <div class="RememberRow">
+
+
+                        <label class="RememberLabel">
+
+
+                            <input type="checkbox"
+                                   name="RememberMe"
+                                   value="true" />
+
+
+                            <span>
+
+                                Remember me
+
+                            </span>
+
+
+                        </label>
+
+
+                    </div>
+
+
+                    <!-- ==================================================
+                         LOGIN BUTTON
+                    =================================================== -->
+
+                    <button type="submit"
+                            class="LoginButton">
+
+
+                        <span>
+
+                            Login
+
+                        </span>
+
+
+                        <i class="bi bi-arrow-right"></i>
+
+
+                    </button>
+
+
+                </form>
+
+
+                <!-- ==================================================
+                     SECURITY NOTICE
+                =================================================== -->
+
+                <div class="SecurityNotice">
+
+
+                    <i class="bi bi-shield-check"></i>
+
+
+                    <div>
+
+
+                        <strong>
+
+                            Secure Admin Access
+
+                        </strong>
+
+
+                        <span>
+
+                            This area is restricted to authorized administrators.
+
+                        </span>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         PASSWORD TOGGLE SCRIPT
+    =================================================== -->
+
+    <script>
+
+            function TogglePassword() {
+
+                const password =
+                    document.getElementById("Password");
+
+                const icon =
+                    document.getElementById("PasswordIcon");
+
+
+                if (password.type === "password") {
+
+                    password.type = "text";
+
+                    icon.classList.remove("bi-eye");
+
+                    icon.classList.add("bi-eye-slash");
+
+                }
+                else {
+
+                    password.type = "password";
+
+                    icon.classList.remove("bi-eye-slash");
+
+                    icon.classList.add("bi-eye");
+
+                }
+
+            }
+
+    </script>
+
+
+</body>
+
+</html>

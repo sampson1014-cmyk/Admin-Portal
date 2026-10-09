@@ -1,0 +1,963 @@
+﻿/* =====================================================
+   MERCHANT LIST - FULL ISOLATED STYLE
+===================================================== */
+
+.merchant-list-page {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 0 40px 0 !important;
+    float: none !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+}
+
+
+    /* =====================================================
+   REMOVE POSSIBLE GLOBAL EFFECTS
+===================================================== */
+
+    .merchant-list-page *,
+    .merchant-list-page *::before,
+    .merchant-list-page *::after {
+        box-sizing: border-box !important;
+    }
+
+
+    /* =====================================================
+   HEADER
+===================================================== */
+
+    .merchant-list-page .merchant-list-header {
+        position: relative !important;
+        width: 100% !important;
+        margin: 0 0 24px 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 20px !important;
+        float: none !important;
+        transform: none !important;
+    }
+
+
+        .merchant-list-page .merchant-list-header > div:first-child {
+            position: relative !important;
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            float: none !important;
+        }
+
+
+        .merchant-list-page .merchant-list-header h2 {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 28px !important;
+            line-height: 1.2 !important;
+            font-weight: 700 !important;
+            color: #171716 !important;
+            float: none !important;
+            transform: none !important;
+        }
+
+
+        .merchant-list-page .merchant-list-header p {
+            margin: 7px 0 0 0 !important;
+            padding: 0 !important;
+            font-size: 14px !important;
+            line-height: 1.5 !important;
+            color: #858581 !important;
+            float: none !important;
+        }
+
+
+    /* =====================================================
+   HEADER ACTIONS
+===================================================== */
+
+    .merchant-list-page .merchant-header-actions {
+        position: relative !important;
+        flex: 0 0 auto !important;
+        width: auto !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        float: none !important;
+        transform: none !important;
+    }
+
+
+        .merchant-list-page .merchant-header-actions a,
+        .merchant-list-page .merchant-header-actions button {
+            position: relative !important;
+            width: auto !important;
+            min-width: 0 !important;
+            height: 42px !important;
+            min-height: 42px !important;
+            max-height: 42px !important;
+            margin: 0 !important;
+            padding: 0 15px !important;
+            border-radius: 9px !important;
+            display: inline-flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 7px !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            line-height: 1 !important;
+            white-space: nowrap !important;
+            text-decoration: none !important;
+            float: none !important;
+            transform: none !important;
+            box-sizing: border-box !important;
+        }
+
+
+    /* BACK */
+
+    .merchant-list-page .merchant-back-btn {
+        background: #ffffff !important;
+        border: 1px solid #deded9 !important;
+        color: #444440 !important;
+    }
+
+        .merchant-list-page .merchant-back-btn:hover {
+            background: #f7f7f5 !important;
+            border-color: #cacac4 !important;
+            color: #171716 !important;
+        }
+
+
+    /* REFRESH */
+
+    .merchant-list-page .merchant-refresh-btn {
+        background: #171716 !important;
+        border: 1px solid #171716 !important;
+        color: #ffffff !important;
+    }
+
+        .merchant-list-page .merchant-refresh-btn:hover {
+            background: #2b2b29 !important;
+            border-color: #2b2b29 !important;
+            color: #ffffff !important;
+        }
+
+
+    /* ADD */
+
+    .merchant-list-page .merchant-add-btn {
+        background: #496344 !important;
+        border: 1px solid #496344 !important;
+        color: #ffffff !important;
+    }
+
+        .merchant-list-page .merchant-add-btn:hover {
+            background: #3d5439 !important;
+            border-color: #3d5439 !important;
+            color: #ffffff !important;
+        }
+
+
+    /* =====================================================
+   MESSAGE
+===================================================== */
+
+    .merchant-list-page .merchant-message {
+        position: relative !important;
+        width: 100% !important;
+        margin: 0 0 18px 0 !important;
+        padding: 12px 15px !important;
+        border-radius: 9px !important;
+        display: block !important;
+        float: none !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        line-height: 1.4 !important;
+    }
+
+        .merchant-list-page .merchant-message.success {
+            background: #edf7ef !important;
+            color: #27733a !important;
+        }
+
+        .merchant-list-page .merchant-message.error {
+            background: #fff0f0 !important;
+            color: #a33a3a !important;
+        }
+
+
+    /* =====================================================
+   STATS
+===================================================== */
+
+    .merchant-list-page .merchant-stats {
+        position: relative !important;
+        width: 100% !important;
+        margin: 0 0 20px 0 !important;
+        padding: 0 !important;
+        display: grid !important;
+        grid-template-columns: repeat( 3, minmax(0, 1fr) ) !important;
+        gap: 15px !important;
+        float: none !important;
+        transform: none !important;
+    }
+
+
+    .merchant-list-page .merchant-stat-card {
+        position: relative !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 105px !important;
+        margin: 0 !important;
+        padding: 19px !important;
+        background: #ffffff !important;
+        border: 1px solid #e7e7e2 !important;
+        border-radius: 14px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 14px !important;
+        float: none !important;
+        transform: none !important;
+    }
+
+
+    .merchant-list-page .merchant-stat-icon {
+        width: 46px !important;
+        height: 46px !important;
+        min-width: 46px !important;
+        max-width: 46px !important;
+        flex: 0 0 46px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 11px !important;
+        background: #f2f2f0 !important;
+        color: #171716 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+
+        .merchant-list-page .merchant-stat-icon i {
+            margin: 0 !important;
+            font-size: 19px !important;
+        }
+
+
+    .merchant-list-page .merchant-stat-card span {
+        display: block !important;
+        margin: 0 0 5px 0 !important;
+        padding: 0 !important;
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+        color: #858581 !important;
+    }
+
+
+    .merchant-list-page .merchant-stat-card strong {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 25px !important;
+        line-height: 1 !important;
+        color: #171716 !important;
+    }
+
+
+    /* =====================================================
+   FILTER
+===================================================== */
+
+    .merchant-list-page .merchant-filter-card {
+        position: relative !important;
+        width: 100% !important;
+        margin: 0 0 20px 0 !important;
+        padding: 15px !important;
+        background: #ffffff !important;
+        border: 1px solid #e7e7e2 !important;
+        border-radius: 14px !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 170px 85px !important;
+        gap: 9px !important;
+        float: none !important;
+        transform: none !important;
+    }
+
+    .merchant-list-page .staff-filter-card {
+        grid-template-columns: minmax(240px, 1fr) 190px 135px 135px 85px !important;
+    }
+
+
+    .merchant-list-page .merchant-search-box {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 42px !important;
+        margin: 0 !important;
+        padding: 0 12px !important;
+        border: 1px solid #ddddda !important;
+        border-radius: 9px !important;
+        background: #ffffff !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+
+        .merchant-list-page .merchant-search-box i {
+            flex: 0 0 auto !important;
+            margin: 0 !important;
+            font-size: 14px !important;
+            color: #8c8c87 !important;
+        }
+
+
+        .merchant-list-page .merchant-search-box input {
+            width: 100% !important;
+            min-width: 0 !important;
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            outline: none !important;
+            background: transparent !important;
+            font-size: 13px !important;
+            color: #222 !important;
+            box-shadow: none !important;
+        }
+
+
+    .merchant-list-page .merchant-filter-select {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 42px !important;
+        margin: 0 !important;
+        padding: 0 11px !important;
+        border: 1px solid #ddddda !important;
+        border-radius: 9px !important;
+        background: #ffffff !important;
+        font-size: 13px !important;
+        color: #444 !important;
+        box-shadow: none !important;
+    }
+
+
+    .merchant-list-page .merchant-clear-btn {
+        width: 100% !important;
+        height: 42px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 1px solid #ddddda !important;
+        border-radius: 9px !important;
+        background: #f6f6f4 !important;
+        color: #444 !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+    }
+
+
+    /* =====================================================
+   TABLE CARD
+===================================================== */
+
+    .merchant-list-page .merchant-table-card {
+        position: relative !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        border: 1px solid #e7e7e2 !important;
+        border-radius: 14px !important;
+        overflow: hidden !important;
+        float: none !important;
+        transform: none !important;
+    }
+
+
+    .merchant-list-page .merchant-table-header {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 19px 21px !important;
+        border-bottom: 1px solid #eeeeeb !important;
+        background: #ffffff !important;
+        display: block !important;
+        float: none !important;
+    }
+
+
+        .merchant-list-page .merchant-table-header h3 {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 17px !important;
+            line-height: 1.3 !important;
+            font-weight: 700 !important;
+            color: #171716 !important;
+        }
+
+
+        .merchant-list-page .merchant-table-header p {
+            margin: 5px 0 0 0 !important;
+            padding: 0 !important;
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+            color: #8a8a85 !important;
+        }
+
+
+    /* =====================================================
+   TABLE
+===================================================== */
+
+    .merchant-list-page #merchantTableWrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: auto !important;
+        display: block !important;
+        float: none !important;
+    }
+
+
+    .merchant-list-page .merchant-table {
+        width: 100% !important;
+        min-width: 760px !important;
+        margin: 0 !important;
+        border-collapse: collapse !important;
+        table-layout: auto !important;
+        vertical-align: middle !important;
+        float: none !important;
+    }
+
+
+        .merchant-list-page .merchant-table thead th {
+            height: auto !important;
+            margin: 0 !important;
+            padding: 13px 18px !important;
+            border: none !important;
+            border-bottom: 1px solid #e8e8e4 !important;
+            background: #fafaf8 !important;
+            color: #858581 !important;
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
+            white-space: nowrap !important;
+            vertical-align: middle !important;
+            text-align: left !important;
+        }
+
+
+        .merchant-list-page .merchant-table tbody td {
+            height: auto !important;
+            margin: 0 !important;
+            padding: 15px 18px !important;
+            border: none !important;
+            border-bottom: 1px solid #eeeeeb !important;
+            background: #ffffff !important;
+            color: #363632 !important;
+            font-size: 13px !important;
+            line-height: 1.4 !important;
+            white-space: nowrap !important;
+            vertical-align: middle !important;
+        }
+
+
+        .merchant-list-page .merchant-table tbody tr {
+            margin: 0 !important;
+            padding: 0 !important;
+            transform: none !important;
+        }
+
+
+            .merchant-list-page .merchant-table tbody tr:hover td {
+                background: #fafaf8 !important;
+            }
+
+
+    .merchant-list-page .merchant-name {
+        max-width: 230px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        font-weight: 700 !important;
+        color: #171716 !important;
+    }
+
+
+    .merchant-list-page .merchant-id {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 12px !important;
+        color: #8a8a85 !important;
+    }
+
+
+    /* =====================================================
+   STATUS
+===================================================== */
+
+    .merchant-list-page .merchant-status {
+        width: auto !important;
+        min-width: 68px !important;
+        height: auto !important;
+        min-height: 24px !important;
+        margin: 0 !important;
+        padding: 5px 10px !important;
+        border-radius: 999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        line-height: 1 !important;
+    }
+
+
+        .merchant-list-page .merchant-status.active {
+            background: #edf7ef !important;
+            color: #27733a !important;
+        }
+
+
+        .merchant-list-page .merchant-status.inactive {
+            background: #f3f3f1 !important;
+            color: #77776f !important;
+        }
+
+
+    /* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+    .merchant-list-page .merchant-action-group {
+        width: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 6px !important;
+        white-space: nowrap !important;
+    }
+
+
+    .merchant-list-page .merchant-edit-btn,
+    .merchant-list-page .merchant-delete-btn {
+        width: 34px !important;
+        min-width: 34px !important;
+        max-width: 34px !important;
+        height: 34px !important;
+        min-height: 34px !important;
+        max-height: 34px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 8px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+
+
+    .merchant-list-page .merchant-edit-btn {
+        border: 1px solid #ddddda !important;
+        background: #ffffff !important;
+        color: #444 !important;
+    }
+
+
+    .merchant-list-page .merchant-delete-btn {
+        border: 1px solid #ddddda !important;
+        background: #ffffff !important;
+        color: #9a4b4b !important;
+    }
+
+
+    .merchant-list-page .merchant-edit-btn:hover {
+        background: #171716 !important;
+        border-color: #171716 !important;
+        color: #ffffff !important;
+    }
+
+
+    .merchant-list-page .merchant-delete-btn:hover {
+        background: #fff0f0 !important;
+        border-color: #e5bcbc !important;
+        color: #a33a3a !important;
+    }
+
+
+    /* =====================================================
+   LOADING / EMPTY
+===================================================== */
+
+    .merchant-list-page .merchant-state {
+        width: 100% !important;
+        min-height: 250px !important;
+        margin: 0 !important;
+        padding: 40px 20px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        float: none !important;
+    }
+
+
+        .merchant-list-page .merchant-state i {
+            margin: 0 0 11px 0 !important;
+            font-size: 36px !important;
+            color: #b2b2ac !important;
+        }
+
+
+        .merchant-list-page .merchant-state h4 {
+            margin: 0 0 5px 0 !important;
+            padding: 0 !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #444 !important;
+        }
+
+
+        .merchant-list-page .merchant-state p {
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 12px !important;
+            color: #8a8a85 !important;
+        }
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+#merchantModal {
+    padding-right: 0 !important;
+}
+
+
+    #merchantModal .modal-dialog {
+        width: auto !important;
+        max-width: 520px !important;
+        margin: 1.75rem auto !important;
+    }
+
+
+    #merchantModal .modal-content {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+    }
+
+
+    #merchantModal .modal-header {
+        margin: 0 !important;
+        padding: 18px 21px !important;
+        border-bottom: 1px solid #eeeeeb !important;
+        background: #ffffff !important;
+    }
+
+
+    #merchantModal .modal-title {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: #171716 !important;
+    }
+
+
+    #merchantModal .modal-body {
+        margin: 0 !important;
+        padding: 21px !important;
+        background: #ffffff !important;
+    }
+
+
+    #merchantModal .modal-footer {
+        margin: 0 !important;
+        padding: 14px 21px !important;
+        border-top: 1px solid #eeeeeb !important;
+        background: #ffffff !important;
+    }
+
+
+    #merchantModal .form-label {
+        display: block !important;
+        margin: 0 0 6px 0 !important;
+        padding: 0 !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #555 !important;
+    }
+
+
+    #merchantModal .form-control,
+    #merchantModal .form-select {
+        width: 100% !important;
+        min-height: 42px !important;
+        margin: 0 !important;
+        border-color: #ddddda !important;
+        border-radius: 9px !important;
+        font-size: 13px !important;
+        box-shadow: none !important;
+    }
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .merchant-list-page .merchant-list-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+
+    .merchant-list-page .merchant-header-actions {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
+    }
+}
+
+
+@media (max-width: 850px) {
+
+    .merchant-list-page .merchant-stats {
+        grid-template-columns: 1fr !important;
+    }
+
+    .merchant-list-page .merchant-filter-card {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .merchant-list-page .merchant-header-actions {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        width: 100% !important;
+    }
+
+    .merchant-list-page .merchant-back-btn,
+    .merchant-list-page .merchant-refresh-btn {
+        width: 100% !important;
+    }
+
+    .merchant-list-page .merchant-add-btn {
+        width: 100% !important;
+        grid-column: 1 / -1 !important;
+    }
+}
+
+/* =====================================================
+   FORCE HIDE LOADING AFTER DATA LOAD
+===================================================== */
+
+#merchantLoading[hidden] {
+    display: none !important;
+}
+
+#merchantState[hidden] {
+    display: none !important;
+}
+
+#outletState[hidden] {
+    display: none !important;
+}
+
+#staffState[hidden] {
+    display: none !important;
+}
+
+#merchantTableWrapper[hidden] {
+    display: none !important;
+}
+
+#outletTableWrapper[hidden] {
+    display: none !important;
+}
+
+#staffTableWrapper[hidden] {
+    display: none !important;
+}
+
+.merchant-list-page #outletTableWrapper .merchant-table {
+    min-width: 650px !important;
+}
+
+
+/* =====================================================
+   OUTLET ACTIONS
+===================================================== */
+
+.merchant-list-page .outlet-action-buttons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.merchant-list-page .outlet-action-btn {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    font-size: 16px;
+    line-height: 1;
+    transition: transform .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease, box-shadow .16s ease;
+}
+
+.merchant-list-page .outlet-action-btn:hover {
+    transform: translateY(-1px);
+}
+
+.merchant-list-page .outlet-action-btn:focus-visible {
+    outline: 3px solid rgba(55, 111, 72, .28);
+    outline-offset: 2px;
+}
+
+.merchant-list-page .outlet-edit-btn {
+    border-color: #d7e5da;
+    background: #f2f8f3;
+    color: #317040;
+}
+
+.merchant-list-page .outlet-edit-btn:hover {
+    border-color: #317040;
+    background: #317040;
+    color: #fff;
+    box-shadow: 0 5px 12px rgba(49, 112, 64, .22);
+}
+
+.merchant-list-page .outlet-delete-btn {
+    border-color: #f0d6d8;
+    background: #fff5f5;
+    color: #b43d48;
+}
+
+.merchant-list-page .outlet-delete-btn:hover {
+    border-color: #b43d48;
+    background: #b43d48;
+    color: #fff;
+    box-shadow: 0 5px 12px rgba(180, 61, 72, .20);
+}
+
+.outlet-dialog-overlay,
+.staff-dialog-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    overflow-y: auto;
+    background: rgba(18, 18, 17, .55);
+    backdrop-filter: blur(2px);
+}
+
+#outletModal[hidden] {
+    display: none !important;
+}
+
+#staffModal[hidden] {
+    display: none !important;
+}
+
+.outlet-dialog-card,
+.staff-dialog-card {
+    width: min(560px, 100%);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 16px;
+    color: #171716;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .25);
+}
+
+.outlet-dialog-overlay .modal-header,
+.outlet-dialog-overlay .modal-footer,
+.staff-dialog-overlay .modal-header,
+.staff-dialog-overlay .modal-footer {
+    padding: 18px 22px;
+}
+
+.outlet-dialog-overlay .modal-body,
+.staff-dialog-overlay .modal-body {
+    padding: 22px;
+}
+
+body.outlet-dialog-open {
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   LOADING STATE
+===================================================== */
+
+#merchantLoading {
+    width: 100%;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+@media (max-width: 1200px) and (min-width: 851px) {
+    .merchant-list-page .staff-filter-card {
+        grid-template-columns: minmax(240px, 1fr) repeat(2, minmax(130px, .55fr)) !important;
+    }
+
+    .merchant-list-page .staff-filter-card .merchant-clear-btn {
+        width: 100% !important;
+    }
+}
+
+
+    #merchantLoading .spinner-border {
+        width: 30px;
+        height: 30px;
+    }
+
+
+    #merchantLoading p {
+        margin: 12px 0 0;
+        color: #888;
+        font-size: 13px;
+    }

@@ -1,0 +1,54 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Outlets";
+    ViewData["Subtitle"] = "View and manage outlet locations.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/merchant-list.css" asp-append-version="true" />
+}
+
+<div class="merchant-list-page">
+    <div class="merchant-list-header">
+        <div><h2>Outlets</h2><p>View and manage merchant outlet locations.</p></div>
+        <div class="merchant-header-actions">
+            <button type="button" class="merchant-refresh-btn" id="refreshOutlets"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+            <button type="button" class="merchant-add-btn" id="addOutletButton"><i class="bi bi-plus-lg"></i> Add Outlet</button>
+        </div>
+    </div>
+    <div id="outletMessage" class="merchant-message" hidden></div>
+    <div class="merchant-stats">
+        <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-geo-alt"></i></div><div><span>Total Outlets</span><strong id="totalOutlets">0</strong></div></div>
+        <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-check-circle"></i></div><div><span>Active</span><strong id="activeOutlets">0</strong></div></div>
+        <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-x-circle"></i></div><div><span>Inactive</span><strong id="inactiveOutlets">0</strong></div></div>
+    </div>
+    <div class="merchant-filter-card">
+        <div class="merchant-search-box"><i class="bi bi-search"></i><input type="text" id="outletSearch" placeholder="Search outlet..." /></div>
+        <select id="outletStatusFilter" class="merchant-filter-select"><option value="">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option></select>
+        <button type="button" class="merchant-clear-btn" id="clearOutletFilters">Clear</button>
+    </div>
+    <div class="merchant-table-card">
+        <div class="merchant-table-header"><div><h3>Outlet List</h3><p id="outletResultText"></p></div></div>
+        <div id="outletState" class="merchant-state" hidden><i class="bi bi-geo-alt"></i><h4 id="outletStateTitle">No Outlets</h4><p id="outletStateText">No outlet records were found.</p></div>
+        <div class="table-responsive" id="outletTableWrapper" hidden><table class="table merchant-table"><thead><tr><th>ID</th><th>Outlet</th><th>Phone</th><th>Address</th><th>Status</th><th class="text-end">Action</th></tr></thead><tbody id="outletTableBody"></tbody></table></div>
+    </div>
+</div>
+
+<div id="outletModal" class="outlet-dialog-overlay" hidden><div class="outlet-dialog-card" role="dialog" aria-modal="true" aria-labelledby="outletModalTitle">
+    <div class="modal-header"><h5 class="modal-title" id="outletModalTitle">Add Outlet</h5><button type="button" class="btn-close" id="closeOutletModal" aria-label="Close"></button></div>
+    <form id="outletForm"><div class="modal-body">
+        <input type="hidden" id="outletOriginalId" />
+        <input type="hidden" id="outletCode" />
+        <div class="mb-3" id="outletIdDisplay" hidden><label class="form-label">Outlet ID</label><div class="form-control bg-light" id="outletIdText"></div></div>
+        <div class="mb-3"><label for="outletName" class="form-label">Outlet Name</label><input type="text" class="form-control" id="outletName" placeholder="Enter outlet name" required /></div>
+        <div class="mb-3"><label for="outletPhone" class="form-label">Phone Number</label><input type="text" class="form-control" id="outletPhone" placeholder="Enter phone number" /></div>
+        <div class="mb-3"><label for="outletAddress" class="form-label">Address</label><textarea class="form-control" id="outletAddress" rows="3" placeholder="Enter address"></textarea></div>
+        <div class="row"><div class="col-md-6 mb-3"><label for="outletLatitude" class="form-label">Latitude</label><input type="number" class="form-control" id="outletLatitude" step="any" value="0" /></div><div class="col-md-6 mb-3"><label for="outletLongitude" class="form-label">Longitude</label><input type="number" class="form-control" id="outletLongitude" step="any" value="0" /></div></div>
+        <div class="mb-3"><label for="outletStatus" class="form-label">Status</label><select class="form-select" id="outletStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
+        <div id="outletFormError" class="alert alert-danger" hidden></div>
+    </div><div class="modal-footer"><button type="button" class="btn btn-light" id="cancelOutletModal">Cancel</button><button type="submit" class="btn btn-dark" id="saveOutletButton">Create Outlet</button></div></form>
+</div></div>
+
+@section Scripts {
+    <script src="~/js/outlets.js" asp-append-version="true"></script>
+}

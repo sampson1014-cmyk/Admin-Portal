@@ -1,0 +1,42 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Data Import";
+    ViewData["Subtitle"] = "Validate a CSV file and create member accounts in a controlled batch.";
+}
+
+@section Styles { <link rel="stylesheet" href="~/css/data-import.css" asp-append-version="true" /> }
+
+@section HeaderActions {
+    <button type="button" class="btn" id="downloadImportTemplate"><i class="bi bi-download"></i> Download template</button>
+}
+
+<div class="import-page">
+    <div id="importMessage" class="import-message" role="alert" hidden></div>
+
+    <section class="import-guide">
+        <div class="import-guide-copy"><span>MEMBER CSV IMPORT</span><h2>Prepare and validate your member data</h2><p>Upload a CSV file using the template. Every row is checked before anything is sent to the API.</p></div>
+        <ol><li><strong>1</strong><span>Download template</span></li><li><strong>2</strong><span>Add member data</span></li><li><strong>3</strong><span>Validate and import</span></li></ol>
+    </section>
+
+    <section class="import-panel">
+        <div class="import-upload" id="importDropZone">
+            <input type="file" id="importFile" accept=".csv,text/csv" hidden />
+            <span class="import-upload-icon"><i class="bi bi-file-earmark-spreadsheet"></i></span>
+            <h3>Drop your CSV file here</h3>
+            <p>or choose a file from your computer</p>
+            <button type="button" class="btn btn-primary" id="chooseImportFile"><i class="bi bi-folder2-open"></i> Choose CSV</button>
+            <small>Maximum file size: 2 MB</small>
+        </div>
+
+        <div class="import-file-card" id="importFileCard" hidden><span><i class="bi bi-filetype-csv"></i></span><div><strong id="importFileName">members.csv</strong><small id="importFileDetails"></small></div><button type="button" id="removeImportFile" aria-label="Remove file"><i class="bi bi-x-lg"></i></button></div>
+
+        <div class="import-results" id="importResults" hidden>
+            <div class="import-summary"><article><small>Total rows</small><strong id="importTotal">0</strong></article><article class="valid"><small>Ready</small><strong id="importValid">0</strong></article><article class="invalid"><small>Needs attention</small><strong id="importInvalid">0</strong></article></div>
+            <div class="import-table-heading"><div><h3>Validation preview</h3><p id="importResultText"></p></div><label><input type="checkbox" id="showInvalidOnly" /> Show errors only</label></div>
+            <div class="import-table-wrap"><table class="import-table"><thead><tr><th>Row</th><th>Name</th><th>Email</th><th>Phone</th><th>Tier</th><th>Status</th><th>Validation</th></tr></thead><tbody id="importTableBody"></tbody></table></div>
+            <div class="import-footer"><div class="import-progress-copy"><strong id="importProgressTitle">Ready to import</strong><span id="importProgressText">Only valid rows will be created.</span><div class="import-progress-track" id="importProgressTrack" hidden><span id="importProgressBar"></span></div></div><button type="button" class="btn btn-primary" id="startMemberImport"><i class="bi bi-cloud-arrow-up"></i><span>Import valid members</span></button></div>
+        </div>
+    </section>
+</div>
+
+@section Scripts { <script src="~/js/data-import.js" asp-append-version="true"></script> }

@@ -1,0 +1,90 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Rewards";
+    ViewData["Subtitle"] = "Create and manage member rewards.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/rewards.css" asp-append-version="true" />
+}
+
+<div class="rewards-page">
+    <section class="rewards-heading">
+        <div><h2>Rewards Management</h2><p>Manage the rewards members can redeem with their points.</p></div>
+        <div class="rewards-heading-actions">
+            <button type="button" id="refreshRewards" class="reward-button secondary"><i class="bi bi-arrow-clockwise"></i><span>Refresh</span></button>
+            <button type="button" id="addReward" class="reward-button primary"><i class="bi bi-plus-lg"></i> Add reward</button>
+        </div>
+    </section>
+
+    <div id="rewardMessage" class="reward-message" role="alert" hidden></div>
+
+    <section class="reward-summary" aria-label="Rewards summary">
+        <article><span class="reward-summary-icon total"><i class="bi bi-gift"></i></span><div><small>Total rewards</small><strong id="rewardTotal">0</strong><p>Available in the catalogue</p></div></article>
+        <article><span class="reward-summary-icon active"><i class="bi bi-check-circle"></i></span><div><small>Active</small><strong id="rewardActive">0</strong><p>Ready for redemption</p></div></article>
+        <article><span class="reward-summary-icon points"><i class="bi bi-stars"></i></span><div><small>Average points</small><strong id="rewardAveragePoints">0</strong><p>Average redemption cost</p></div></article>
+        <article><span class="reward-summary-icon expiring"><i class="bi bi-hourglass-split"></i></span><div><small>Expiring soon</small><strong id="rewardExpiring">0</strong><p>Within the next 30 days</p></div></article>
+    </section>
+
+    <section class="rewards-card">
+        <header class="rewards-toolbar">
+            <div><h3>Reward Catalogue</h3><p id="rewardResultText" aria-live="polite">Loading rewards...</p></div>
+            <button type="button" id="exportRewards" class="reward-button secondary" disabled><i class="bi bi-download"></i> Export CSV</button>
+        </header>
+
+        <div class="reward-filters">
+            <label class="reward-search" for="rewardSearch"><i class="bi bi-search"></i><input id="rewardSearch" type="search" placeholder="Search reward name, title or category" /></label>
+            <label><span>Status</span><select id="rewardStatus"><option value="">All statuses</option></select></label>
+            <label><span>Category</span><select id="rewardCategory"><option value="">All categories</option></select></label>
+            <label><span>Sort</span><select id="rewardSort"><option value="newest">Newest first</option><option value="points-asc">Lowest points</option><option value="points-desc">Highest points</option><option value="name">Name A-Z</option></select></label>
+        </div>
+
+        <div id="rewardLoading" class="reward-state"><div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading</span></div><p>Loading rewards...</p></div>
+        <div id="rewardEmpty" class="reward-state" hidden><i class="bi bi-gift"></i><h4 id="rewardEmptyTitle">No rewards yet</h4><p id="rewardEmptyText">Create the first reward for members.</p><button type="button" id="retryRewards" class="reward-button secondary" hidden>Try again</button></div>
+
+        <div id="rewardTableWrapper" class="table-responsive" hidden>
+            <table class="reward-table">
+                <thead><tr><th>Reward</th><th>Category</th><th>Points</th><th>Validity</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr></thead>
+                <tbody id="rewardTableBody"></tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<div class="modal fade" id="rewardFormModal" tabindex="-1" aria-labelledby="rewardFormTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"><div class="modal-content reward-modal">
+        <form id="rewardForm" novalidate>
+            <div class="modal-header"><div><p class="reward-modal-eyebrow" id="rewardFormEyebrow">New reward</p><h2 class="modal-title fs-5" id="rewardFormTitle">Add reward</h2></div><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+            <div class="modal-body">
+                <input type="hidden" id="rewardId" />
+                <div class="reward-form-grid">
+                    <label><span>Name <b>*</b></span><input id="rewardName" maxlength="120" required placeholder="e.g. Free Signature Drink" /></label>
+                    <label><span>Title</span><input id="rewardTitle" maxlength="150" placeholder="Member-facing title" /></label>
+                    <label><span>Short title</span><input id="rewardShortTitle" maxlength="80" placeholder="Compact display name" /></label>
+                    <label><span>Subtitle</span><input id="rewardSubTitle" maxlength="180" placeholder="A short supporting message" /></label>
+                    <label><span>Points required <b>*</b></span><input id="rewardPoint" type="number" min="0" step="1" required placeholder="0" /></label>
+                    <label><span>Category</span><input id="rewardCategoryInput" maxlength="80" placeholder="e.g. Food, Drink, Voucher" /></label>
+                    <label><span>Status <b>*</b></span><select id="rewardStatusInput" required><option value="Active">Active</option><option value="Inactive">Inactive</option></select></label>
+                    <label><span>Image path or URL</span><input id="rewardImage" type="text" placeholder="https://example.com/reward.jpg" /></label>
+                    <label><span>Start date</span><input id="rewardCreateDate" type="datetime-local" /></label>
+                    <label><span>Expiry date</span><input id="rewardExpireDate" type="datetime-local" /></label>
+                    <label class="wide"><span>Description</span><textarea id="rewardDescription" rows="4" maxlength="1000" placeholder="Explain what members receive and how to redeem it."></textarea></label>
+                    <label class="wide"><span>iOS description</span><textarea id="rewardDescriptionIos" rows="3" maxlength="1000" placeholder="Leave empty to use the main description."></textarea></label>
+                    <label class="wide"><span>Terms and conditions</span><textarea id="rewardTnc" rows="4" maxlength="2000" placeholder="Add redemption rules, limits, and exclusions."></textarea></label>
+                </div>
+            </div>
+            <div class="modal-footer reward-form-footer"><div id="rewardFormError" class="reward-form-error" role="alert" hidden></div><div class="reward-form-actions"><button type="button" class="reward-button secondary" data-bs-dismiss="modal">Cancel</button><button type="submit" id="saveReward" class="reward-button primary"><span class="spinner-border spinner-border-sm" hidden></span><span>Save reward</span></button></div></div>
+        </form>
+    </div></div>
+</div>
+
+<div class="modal fade" id="rewardDeleteModal" tabindex="-1" aria-labelledby="rewardDeleteTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"><div class="modal-content reward-modal reward-delete-modal">
+        <div class="modal-body"><span class="reward-delete-icon"><i class="bi bi-trash3"></i></span><h2 id="rewardDeleteTitle">Delete reward?</h2><p>This will permanently remove <strong id="rewardDeleteName">this reward</strong> from the catalogue.</p><div id="rewardDeleteError" class="reward-form-error" role="alert" hidden></div></div>
+        <div class="modal-footer"><button type="button" class="reward-button secondary" data-bs-dismiss="modal">Cancel</button><button type="button" id="confirmDeleteReward" class="reward-button danger"><span class="spinner-border spinner-border-sm" hidden></span><span>Delete reward</span></button></div>
+    </div></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/rewards.js" asp-append-version="true"></script>
+}

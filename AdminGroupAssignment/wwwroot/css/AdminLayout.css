@@ -1,0 +1,782 @@
+﻿
+/* =========================================================
+   ADMIN LAYOUT
+========================================================= */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #fff8f6;
+    color: #292929;
+}
+
+
+/* =========================================================
+   WRAPPER
+========================================================= */
+
+.AdminWrapper {
+    min-height: 100vh;
+    display: flex;
+    background: #fff8f6;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.AdminSidebar {
+    width: 260px;
+    min-width: 260px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background: #252525;
+    color: white;
+    z-index: 1000;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, width 0.3s ease;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.AdminLogo {
+    height: 90px;
+    padding: 0 25px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.LogoIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ff6f61;
+    color: white;
+    font-size: 21px;
+    flex-shrink: 0;
+}
+
+
+.LogoText h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+
+.LogoText span {
+    display: block;
+    margin-top: 2px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: #a9a9a9;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.AdminNavigation {
+    flex: 1;
+    padding: 25px 15px;
+    overflow-y: auto;
+}
+
+
+.NavigationTitle {
+    margin: 0 12px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #858585;
+}
+
+
+.AdminNavItem {
+    position: relative;
+    width: 100%;
+    min-height: 48px;
+    margin-bottom: 6px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    border-radius: 11px;
+    color: #bdbdbd;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+
+    .AdminNavItem i {
+        width: 22px;
+        text-align: center;
+        font-size: 17px;
+        transition: transform 0.2s ease;
+    }
+
+
+    .AdminNavItem:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.07);
+        transform: translateX(3px);
+    }
+
+
+        .AdminNavItem:hover i {
+            transform: scale(1.08);
+        }
+
+
+    /* =========================================================
+   ACTIVE NAVIGATION
+========================================================= */
+
+    .AdminNavItem.active {
+        color: white;
+        background: #ff6f61;
+        box-shadow: 0 8px 20px rgba(255, 111, 97, 0.22);
+    }
+
+
+        .AdminNavItem.active:hover {
+            background: #ff6f61;
+            transform: none;
+        }
+
+
+/* =========================================================
+   SIDEBAR BOTTOM
+========================================================= */
+
+.SidebarBottom {
+    padding: 18px 15px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================================
+   ADMIN PROFILE
+========================================================= */
+
+.AdminProfile {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+
+.ProfileIcon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #65a88a;
+    color: white;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+
+.ProfileInfo {
+    min-width: 0;
+}
+
+
+    .ProfileInfo strong {
+        display: block;
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    .ProfileInfo span {
+        display: block;
+        margin-top: 2px;
+        color: #929292;
+        font-size: 10px;
+    }
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+.LogoutButton {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    border-radius: 10px;
+    color: #bdbdbd;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+
+    .LogoutButton i {
+        font-size: 17px;
+    }
+
+
+    .LogoutButton:hover {
+        background: rgba(255, 111, 97, 0.12);
+        color: #ff8b80;
+    }
+
+
+/* =========================================================
+   MAIN AREA
+========================================================= */
+
+.AdminMain {
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.AdminTopBar {
+    height: 90px;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-bottom: 1px solid #eeeeee;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+}
+
+
+.TopBarLeft {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.TopBarSmallText {
+    margin: 0 0 3px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    color: #a0a0a0;
+}
+
+
+.TopBarLeft h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #252525;
+    letter-spacing: -0.4px;
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+.MobileMenuButton {
+    width: 42px;
+    height: 42px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    background: #fff1ee;
+    color: #ff6f61;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   TOP BAR RIGHT
+========================================================= */
+
+.TopBarRight {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.NotificationButton {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #fff8f6;
+    color: #555;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+
+    .NotificationButton:hover {
+        background: #fff1ee;
+        color: #ff6f61;
+        transform: translateY(-2px);
+    }
+
+
+.NotificationDot {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff6f61;
+    border: 2px solid white;
+}
+
+
+/* =========================================================
+   TOP ADMIN PROFILE
+========================================================= */
+
+.TopAdminProfile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.TopProfileIcon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #65a88a;
+    color: white;
+    font-size: 17px;
+}
+
+
+.TopProfileText strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+}
+
+
+.TopProfileText span {
+    display: block;
+    margin-top: 2px;
+    font-size: 10px;
+    color: #999;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.AdminContent {
+    flex: 1;
+    width: 100%;
+    padding: 30px 32px 35px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.AdminFooter {
+    min-height: 60px;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #eeeeee;
+    background: white;
+    color: #999;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   SIDEBAR OVERLAY
+========================================================= */
+
+.SidebarOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 900;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+
+.OverlayShow {
+    display: block;
+    opacity: 1;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.AdminNavigation::-webkit-scrollbar {
+    width: 4px;
+}
+
+
+.AdminNavigation::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.AdminNavigation::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   SELECTION
+========================================================= */
+
+::selection {
+    background: #ff6f61;
+    color: white;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+
+    .AdminSidebar {
+        width: 230px;
+        min-width: 230px;
+    }
+
+    .AdminMain {
+        width: calc(100% - 230px);
+        margin-left: 230px;
+    }
+
+    .AdminTopBar {
+        padding: 0 24px;
+    }
+
+    .AdminContent {
+        padding: 25px 24px 30px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .AdminSidebar {
+        width: 260px;
+        min-width: 260px;
+        transform: translateX(-100%);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+    }
+
+
+        .AdminSidebar.SidebarOpen {
+            transform: translateX(0);
+        }
+
+
+    .AdminMain {
+        width: 100%;
+        margin-left: 0;
+    }
+
+
+    .MobileMenuButton {
+        display: flex;
+    }
+
+
+    .AdminTopBar {
+        height: 75px;
+        padding: 0 18px;
+    }
+
+
+    .TopBarLeft h1 {
+        font-size: 19px;
+    }
+
+
+    .TopBarSmallText {
+        font-size: 8px;
+    }
+
+
+    .TopAdminProfile {
+        display: none;
+    }
+
+
+    .TopBarRight {
+        gap: 0;
+    }
+
+
+    .AdminContent {
+        padding: 20px 16px 25px;
+    }
+
+
+    .AdminFooter {
+        min-height: 55px;
+        padding: 0 18px;
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .AdminTopBar {
+        padding: 0 14px;
+    }
+
+
+    .AdminContent {
+        padding: 18px 13px 22px;
+    }
+
+
+    .AdminFooter {
+        padding: 0 14px;
+    }
+}
+
+/* =====================================================
+   SIDEBAR GROUP
+===================================================== */
+
+.sidebar-group {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+
+/* =====================================================
+   MAIN MERCHANT BUTTON
+===================================================== */
+
+.sidebar-group-header {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 15px;
+    border: none;
+    background: transparent;
+    color: #b9b9b5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    border-radius: 12px;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+
+    .sidebar-group-header:hover {
+        background: rgba(255,255,255,.05);
+        color: #ffffff;
+    }
+
+
+/* =====================================================
+   LEFT SIDE
+===================================================== */
+
+.sidebar-group-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+/* =====================================================
+   ICON BOX
+===================================================== */
+
+.sidebar-group-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.06);
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+
+    .sidebar-group-icon i {
+        font-size: 15px;
+    }
+
+
+/* =====================================================
+   ARROW
+===================================================== */
+
+.sidebar-chevron {
+    font-size: 11px;
+    color: #777;
+    transition: transform .2s ease;
+}
+
+
+/* rotate arrow when open */
+
+.sidebar-group-header[aria-expanded="true"]
+.sidebar-chevron {
+    transform: rotate(180deg);
+}
+
+
+/* =====================================================
+   SUB MENU
+===================================================== */
+
+.sidebar-submenu {
+    margin-top: 4px;
+    padding-left: 17px;
+}
+
+
+/* =====================================================
+   SUB ITEM
+===================================================== */
+
+.sidebar-subitem {
+    position: relative;
+    min-height: 42px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+    color: #8d8d89;
+    font-size: 13px;
+    border-radius: 9px;
+    transition: all .2s ease;
+}
+
+
+    /* vertical line */
+
+    .sidebar-subitem::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 1px;
+        background: rgba(255,255,255,.08);
+    }
+
+
+    .sidebar-subitem i {
+        width: 18px;
+        font-size: 13px;
+    }
+
+
+    /* hover */
+
+    .sidebar-subitem:hover {
+        color: #ffffff;
+        background: rgba(255,255,255,.04);
+    }
+
+
+    /* active */
+
+    .sidebar-subitem.active {
+        color: #ffffff;
+        background: rgba(255,255,255,.07);
+    }
+
+
+        .sidebar-subitem.active i {
+            color: #ffffff;
+        }

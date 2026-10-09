@@ -1,0 +1,39 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "App Versions";
+    ViewData["Subtitle"] = "Monitor mobile application releases returned by the version API.";
+}
+
+@section Styles { <link rel="stylesheet" href="~/css/app-versions.css" asp-append-version="true" /> }
+
+@section HeaderActions {
+    <button type="button" class="btn" id="refreshVersions"><i class="bi bi-arrow-clockwise"></i><span>Refresh</span></button>
+}
+
+<div class="versions-page">
+    <div id="versionMessage" class="version-message" role="alert" hidden></div>
+
+    <section class="version-stats">
+        <article><span class="version-stat-icon"><i class="bi bi-phone"></i></span><div><small>Total releases</small><strong id="versionTotal">0</strong><p>Returned by the API</p></div></article>
+        <article><span class="version-stat-icon green"><i class="bi bi-check-circle"></i></span><div><small>Active</small><strong id="versionActive">0</strong><p>Available versions</p></div></article>
+        <article><span class="version-stat-icon amber"><i class="bi bi-arrow-up-circle"></i></span><div><small>Required updates</small><strong id="versionRequired">0</strong><p>Forced upgrades</p></div></article>
+        <article><span class="version-stat-icon blue"><i class="bi bi-layers"></i></span><div><small>Platforms</small><strong id="versionPlatforms">0</strong><p>Unique app platforms</p></div></article>
+    </section>
+
+    <section class="version-panel">
+        <header class="version-panel-header"><div><h2>Release Registry</h2><p id="versionResultText">Loading versions...</p></div><button type="button" class="btn" id="exportVersions" disabled><i class="bi bi-download"></i> Export CSV</button></header>
+        <div class="version-toolbar">
+            <label class="version-search"><i class="bi bi-search"></i><input type="search" id="versionSearch" placeholder="Search version, platform or description" /></label>
+            <select id="versionPlatform" aria-label="Filter by platform"><option value="">All platforms</option></select>
+            <select id="versionStatus" aria-label="Filter by status"><option value="">All statuses</option><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
+            <select id="versionSort" aria-label="Sort versions"><option value="newest">Newest first</option><option value="version">Version</option><option value="platform">Platform</option></select>
+        </div>
+        <div id="versionLoading" class="version-state"><span class="spinner-border spinner-border-sm"></span><p>Loading app versions...</p></div>
+        <div id="versionEmpty" class="version-state" hidden><i class="bi bi-phone"></i><h3 id="versionEmptyTitle">No versions found</h3><p id="versionEmptyText">The API returned no version records.</p><button type="button" class="btn" id="retryVersions">Try again</button></div>
+        <div class="version-table-wrap" id="versionTableWrap" hidden>
+            <table class="version-table"><thead><tr><th>Platform</th><th>Version</th><th>Minimum</th><th>Update policy</th><th>Status</th><th>Updated</th><th></th></tr></thead><tbody id="versionTableBody"></tbody></table>
+        </div>
+    </section>
+</div>
+
+@section Scripts { <script src="~/js/app-versions.js" asp-append-version="true"></script> }

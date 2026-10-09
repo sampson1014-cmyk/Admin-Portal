@@ -1,0 +1,512 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    ViewData["Title"] = "Merchants";
+    ViewData["Subtitle"] = "View and manage registered merchants.";
+}
+
+@section Styles {
+
+    <link rel="stylesheet"
+          href="~/css/merchant-list.css"
+          asp-append-version="true" />
+
+}
+
+<div class="merchant-list-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="merchant-list-header">
+
+        <div>
+
+            <h2>Merchants</h2>
+
+            <p>
+                View and manage all registered merchants.
+            </p>
+
+        </div>
+
+        <div class="merchant-header-actions">
+
+            <!-- REFRESH -->
+
+            <button type="button"
+                    class="merchant-refresh-btn"
+                    id="refreshMerchants">
+
+                <i class="bi bi-arrow-clockwise"></i>
+
+                Refresh
+
+            </button>
+
+            <!-- ADD -->
+
+            <button type="button"
+                    class="merchant-add-btn"
+                    id="addMerchantButton">
+
+                <i class="bi bi-plus-lg"></i>
+
+                Add Merchant
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MESSAGE
+    ====================================================== -->
+
+    <div id="merchantMessage"
+         class="merchant-message"
+         hidden>
+    </div>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <div class="merchant-stats">
+
+        <div class="merchant-stat-card">
+
+            <div class="merchant-stat-icon">
+
+                <i class="bi bi-shop"></i>
+
+            </div>
+
+            <div>
+
+                <span>Total Merchants</span>
+
+                <strong id="totalMerchants">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="merchant-stat-card">
+
+            <div class="merchant-stat-icon">
+
+                <i class="bi bi-check-circle"></i>
+
+            </div>
+
+            <div>
+
+                <span>Active</span>
+
+                <strong id="activeMerchants">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="merchant-stat-card">
+
+            <div class="merchant-stat-icon">
+
+                <i class="bi bi-x-circle"></i>
+
+            </div>
+
+            <div>
+
+                <span>Inactive</span>
+
+                <strong id="inactiveMerchants">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTER
+    ====================================================== -->
+
+    <div class="merchant-filter-card">
+
+        <div class="merchant-search-box">
+
+            <i class="bi bi-search"></i>
+
+            <input type="text"
+                   id="merchantSearch"
+                   placeholder="Search merchant..." />
+
+        </div>
+
+
+        <select id="merchantStatusFilter"
+                class="merchant-filter-select">
+
+            <option value="active" selected>
+                Active
+            </option>
+
+            <option value="inactive">
+                Inactive
+            </option>
+
+        </select>
+
+
+        <button type="button"
+                class="merchant-clear-btn"
+                id="clearMerchantFilters">
+
+            Clear
+
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         TABLE
+    ====================================================== -->
+
+    <div class="merchant-table-card">
+
+        <div class="merchant-table-header">
+
+            <div>
+
+                <h3>
+                    Merchant List
+                </h3>
+
+                <p id="merchantResultText"></p>
+
+            </div>
+
+        </div>
+
+
+        <!-- EMPTY STATE -->
+
+        <div id="merchantState"
+             class="merchant-state"
+             hidden>
+
+            <i class="bi bi-shop-window"></i>
+
+            <h4 id="merchantStateTitle">
+                No Merchants
+            </h4>
+
+            <p id="merchantStateText">
+                No merchant records were found.
+            </p>
+
+        </div>
+
+
+        <!-- TABLE -->
+
+        <div class="table-responsive"
+             id="merchantTableWrapper"
+             hidden>
+
+            <table class="table merchant-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Merchant
+                        </th>
+
+                        <th>
+                            Phone
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th class="text-end">
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="merchantTableBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MERCHANT MODAL
+====================================================== -->
+
+<div class="modal fade"
+     id="merchantModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title"
+                    id="merchantModalTitle">
+
+                    Add Merchant
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+
+            <form id="merchantForm">
+
+                <div class="modal-body">
+
+                    <!-- ID -->
+
+                    <input type="hidden"
+                           id="merchantOriginalId" />
+
+
+                    <!-- MERCHANT ID -->
+
+                    <div class="mb-3">
+
+                        <label for="merchantId"
+                               class="form-label">
+
+                            Merchant ID
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="merchantId"
+                               placeholder="Enter merchant ID"
+                               required />
+
+                    </div>
+
+
+                    <!-- MERCHANT NAME -->
+
+                    <div class="mb-3">
+
+                        <label for="merchantName"
+                               class="form-label">
+
+                            Merchant Name
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="merchantName"
+                               placeholder="Enter merchant name"
+                               required />
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="mb-3">
+
+                        <label for="merchantEmail"
+                               class="form-label">
+
+                            Email
+
+                        </label>
+
+                        <input type="email"
+                               class="form-control"
+                               id="merchantEmail"
+                               placeholder="Enter email" />
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="mb-3">
+
+                        <label for="merchantPhone"
+                               class="form-label">
+
+                            Phone 1
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="merchantPhone"
+                               placeholder="Enter phone number"
+                               required />
+
+                    </div>
+
+
+                    <!-- ADDRESS -->
+
+                    <div class="mb-3">
+
+                        <label for="merchantAddress"
+                               class="form-label">
+
+                            Address
+
+                        </label>
+
+                        <textarea class="form-control"
+                                  id="merchantAddress"
+                                  rows="3"
+                                  placeholder="Enter merchant address"
+                                  required></textarea>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="mb-3"
+                         id="merchantPasswordGroup">
+
+                        <label for="merchantPassword"
+                               class="form-label">
+
+                            Password
+
+                        </label>
+
+                        <input type="password"
+                               class="form-control"
+                               id="merchantPassword"
+                               placeholder="Enter password" />
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="mb-3">
+
+                        <label for="merchantStatus"
+                               class="form-label">
+
+                            Status
+
+                        </label>
+
+                        <select class="form-select"
+                                id="merchantStatus"
+                                required>
+
+                            <option value="Active">
+                                Active
+                            </option>
+
+                            <option value="Inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ERROR -->
+
+                    <div id="merchantFormError"
+                         class="alert alert-danger"
+                         hidden>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-light"
+                            data-bs-dismiss="modal">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button type="submit"
+                            class="btn btn-dark"
+                            id="saveMerchantButton">
+
+                        Create Merchant
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script src="~/js/merchant-list.js"
+            asp-append-version="true">
+    </script>
+
+}

@@ -1,0 +1,53 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Notifications";
+    ViewData["Subtitle"] = "Send announcements to everyone or a specific member device.";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/notifications.css" asp-append-version="true" />
+}
+
+<div class="notification-page">
+    <section class="notification-heading"><div><h2>Send Notification</h2><p>Create a push notification for your members.</p></div><span class="notification-api-status"><i class="bi bi-shield-check"></i> JWT protected</span></section>
+    <div id="notificationMessage" class="notification-message" hidden></div>
+
+    <div class="notification-layout">
+        <section class="notification-card">
+            <form id="notificationForm">
+                <div class="notification-section">
+                    <h3>Audience</h3><p>Choose who should receive this notification.</p>
+                    <div class="audience-grid">
+                        <label class="audience-option"><input type="radio" name="audience" value="all" checked /><span><i class="bi bi-people"></i><strong>Everyone</strong><small>Send to all registered devices</small></span></label>
+                        <label class="audience-option"><input type="radio" name="audience" value="device" /><span><i class="bi bi-phone"></i><strong>One Device</strong><small>Send using a device ID</small></span></label>
+                    </div>
+                </div>
+
+                <div class="notification-section target-section" id="notificationTargetSection" hidden>
+                    <label for="notificationTarget">Device ID</label>
+                    <input class="form-control" id="notificationTarget" placeholder="Enter a member's active device ID" />
+                </div>
+
+                <div class="notification-section">
+                    <h3>Message</h3><p>Write the content shown in the member application.</p>
+                    <div class="mb-3"><label for="notificationTitle">Title</label><input class="form-control" id="notificationTitle" maxlength="100" placeholder="Notification title" required /><small><span id="titleCount">0</span>/100</small></div>
+                    <div class="mb-3"><label for="notificationBody">Message</label><textarea class="form-control" id="notificationBody" rows="5" maxlength="500" placeholder="Write your message" required></textarea><small><span id="bodyCount">0</span>/500</small></div>
+                    <div class="mb-3"><label for="notificationImage">Image URL <span>(optional)</span></label><input class="form-control" id="notificationImage" type="url" placeholder="https://..." /></div>
+                </div>
+
+                <div id="notificationFormError" class="alert alert-danger" hidden></div>
+                <div class="notification-actions"><button type="button" class="btn btn-light" id="clearNotification">Clear</button><button type="submit" class="btn btn-dark" id="sendNotification"><i class="bi bi-send"></i> Send Notification</button></div>
+            </form>
+        </section>
+
+        <aside class="notification-preview-card">
+            <span class="preview-label">MEMBER APP PREVIEW</span>
+            <div class="phone-preview"><div class="phone-speaker"></div><div class="preview-app"><span class="preview-icon"><i class="bi bi-shop"></i></span><div><strong>EduvoShop</strong><small>now</small></div></div><h4 id="previewTitle">Notification title</h4><p id="previewBody">Your message will appear here.</p><img id="previewImage" alt="Notification preview" hidden /></div>
+            <p class="preview-note"><i class="bi bi-info-circle"></i> Sending a notification contacts the live API immediately.</p>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/notifications.js" asp-append-version="true"></script>
+}
