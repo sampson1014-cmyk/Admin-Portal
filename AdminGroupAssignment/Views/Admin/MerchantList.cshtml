@@ -147,7 +147,7 @@
          FILTER
     ====================================================== -->
 
-    <div class="merchant-filter-card">
+    <div class="merchant-filter-card merchant-sortable-filters">
 
         <div class="merchant-search-box">
 
@@ -173,6 +173,10 @@
 
         </select>
 
+
+        <select id="merchantSort" class="merchant-filter-select" aria-label="Sort merchants">
+            <option value="id-asc">ID: low to high</option><option value="id-desc">ID: high to low</option><option value="name-asc">Name: A–Z</option><option value="name-desc">Name: Z–A</option>
+        </select>
 
         <button type="button"
                 class="merchant-clear-btn"

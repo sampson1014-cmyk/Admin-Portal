@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function selectedAudience() { return document.querySelector('input[name="audience"]:checked').value; }
-function updateAudience() { const targeted = selectedAudience() !== "all"; document.getElementById("notificationTargetSection").hidden = !targeted; document.getElementById("notificationTarget").required = targeted; }
+function updateAudience() { const targeted = selectedAudience() !== "all"; document.getElementById("notificationTargetSection").hidden = !targeted; document.getElementById("notificationTarget").required = false; document.getElementById("notificationPhone").required = targeted; }
 function updatePreview() {
     const title = document.getElementById("notificationTitle").value, body = document.getElementById("notificationBody").value, source = document.getElementById("notificationImage").value.trim();
     document.getElementById("titleCount").textContent = title.length; document.getElementById("bodyCount").textContent = body.length;
@@ -25,12 +25,13 @@ async function sendNotification(event) {
     event.preventDefault(); hideError();
     const audience = selectedAudience(), title = document.getElementById("notificationTitle").value.trim(), body = document.getElementById("notificationBody").value.trim(), target = document.getElementById("notificationTarget").value.trim();
     if (!title || !body) return showError("Title and message are required.");
-    if (audience !== "all" && !target) return showError("Enter an active device ID.");
+    const phone = document.getElementById("notificationPhone").value.trim();
+    if (audience !== "all" && !/^\+?\d{8,15}$/.test(phone)) return showError("Enter the member's registered phone number.");
     let payload;
     if (audience === "all") {
         payload = { Title: title, Text: body };
     } else {
-        payload = { DeviceId: target, Type: "General", TargetId: target, NotificationHeader: title, NotificationBody: body };
+        payload = { DeviceId: target, PhoneNumber: phone, Type: "General", TargetId: target, NotificationHeader: title, NotificationBody: body };
     }
     const endpoint = audience === "all" ? "/Admin/SendMemberNotification" : "/Admin/SendNotificationByDevice";
     const button = document.getElementById("sendNotification"); button.disabled = true; button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
@@ -38,7 +39,7 @@ async function sendNotification(event) {
         const response = await window.adminFetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(payload) });
         const data = await readJson(response);
         if (!response.ok || notificationFailed(data)) throw new Error(apiMessage(data, "Unable to send notification."));
-        showMessage("Notification sent successfully.", "success"); clearForm();
+        showMessage("Message saved to the member inbox. Phone push alerts are not sent.", "success"); clearForm();
     } catch (error) { showError(error.message || "Unable to send notification."); }
     finally { button.disabled = false; button.innerHTML = '<i class="bi bi-send"></i> Send Notification'; }
 }

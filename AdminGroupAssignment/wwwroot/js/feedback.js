@@ -10,7 +10,20 @@ const feedbackTitle = row => row?.Title ?? row?.title ?? "Untitled feedback";
 const feedbackCategory = row => row?.Category ?? row?.category ?? "Uncategorized";
 const feedbackDescription = row => row?.Description ?? row?.description ?? "";
 const feedbackLocation = row => row?.Location ?? row?.location ?? "";
-const feedbackRating = row => Number(row?.Rating ?? row?.rating ?? 0);
+const feedbackRating = row => {
+    const raw = row?.Rating ?? row?.rating;
+    if (typeof raw !== "number" && typeof raw !== "string") return null;
+    if (typeof raw === "string" && !/^\d+(?:\.\d+)?$/.test(raw.trim())) return null;
+    const rating = Number(raw);
+    return Number.isFinite(rating) && rating >= 1 && rating <= 5 ? rating : null;
+};
+const feedbackRatingLabel = rating => rating === null ? "Not rated" : rating.toFixed(1);
+function compareFeedbackRatings(a, b, descending) {
+    const left = feedbackRating(a), right = feedbackRating(b);
+    if (left === null) return right === null ? 0 : 1;
+    if (right === null) return -1;
+    return descending ? right - left : left - right;
+}
 const feedbackUser = row => row?.UserId ?? row?.userId ?? "";
 const feedbackHtml = value => String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 
@@ -111,7 +124,7 @@ function updateFeedbackCategories() {
 }
 
 function updateFeedbackSummary() {
-    const ratings = feedbackRows.map(feedbackRating).filter(rating => rating > 0);
+    const ratings = feedbackRows.map(feedbackRating).filter(rating => rating !== null);
     const average = ratings.length ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length : 0;
     document.getElementById("feedbackTotal").textContent = feedbackRows.length.toLocaleString();
     document.getElementById("feedbackAverage").textContent = average.toFixed(1);
@@ -155,8 +168,8 @@ function visibleFeedback() {
         return matchesCategory && matchesRating && (!search || text.includes(search));
     });
     rows.sort((a, b) => {
-        if (sort === "rating-desc") return feedbackRating(b.row) - feedbackRating(a.row);
-        if (sort === "rating-asc") return feedbackRating(a.row) - feedbackRating(b.row);
+        if (sort === "rating-desc") return compareFeedbackRatings(a.row, b.row, true);
+        if (sort === "rating-asc") return compareFeedbackRatings(a.row, b.row, false);
         if (sort === "title-asc") return String(feedbackTitle(a.row)).localeCompare(String(feedbackTitle(b.row)));
         return Number(feedbackId(b.row)) - Number(feedbackId(a.row));
     });
@@ -194,12 +207,14 @@ function renderFeedback() {
     body.innerHTML = rows.map(({ row, index }) => {
         const user = feedbackUser(row);
         const initial = String(user || "M").trim().charAt(0).toUpperCase();
-        return `<tr><td><span class="feedback-id">#${feedbackHtml(feedbackId(row))}</span></td><td><strong class="feedback-title">${feedbackHtml(feedbackTitle(row))}</strong><span class="feedback-preview">${feedbackHtml(feedbackDescription(row) || "No description")}</span></td><td><span class="feedback-category">${feedbackHtml(feedbackCategory(row))}</span></td><td><div class="feedback-member"><span>${feedbackHtml(initial)}</span><div><strong>${user ? `Member ${feedbackHtml(user)}` : "Unknown member"}</strong><small>User ID</small></div></div></td><td><span class="feedback-location"><i class="bi bi-geo-alt"></i>${feedbackHtml(feedbackLocation(row) || "Not provided")}</span></td><td><span class="feedback-stars" aria-label="${feedbackRating(row)} out of 5 stars">${ratingStars(feedbackRating(row))}</span><small>${feedbackRating(row).toFixed(1)}</small></td><td><button type="button" class="feedback-view" data-feedback-index="${index}"><i class="bi bi-eye"></i> View</button></td></tr>`;
+        const rating = feedbackRating(row);
+        const ratingLabel = rating === null ? "Not rated" : `${rating} out of 5 stars`;
+        return `<tr><td><span class="feedback-id">#${feedbackHtml(feedbackId(row))}</span></td><td><strong class="feedback-title">${feedbackHtml(feedbackTitle(row))}</strong><span class="feedback-preview">${feedbackHtml(feedbackDescription(row) || "No description")}</span></td><td><span class="feedback-category">${feedbackHtml(feedbackCategory(row))}</span></td><td><div class="feedback-member"><span>${feedbackHtml(initial)}</span><div><strong>${user ? `Member ${feedbackHtml(user)}` : "Unknown member"}</strong><small>User ID</small></div></div></td><td><span class="feedback-location"><i class="bi bi-geo-alt"></i>${feedbackHtml(feedbackLocation(row) || "Not provided")}</span></td><td><span class="feedback-stars" aria-label="${ratingLabel}">${ratingStars(rating)}</span><small>${feedbackRatingLabel(rating)}</small></td><td><button type="button" class="feedback-view" data-feedback-index="${index}"><i class="bi bi-eye"></i> View</button></td></tr>`;
     }).join("");
 }
 
 function ratingStars(rating) {
-    const rounded = Math.max(0, Math.min(5, Math.round(rating)));
+    const rounded = Number.isFinite(rating) ? Math.max(0, Math.min(5, Math.round(rating))) : 0;
     return '<i class="bi bi-star-fill"></i>'.repeat(rounded) + '<i class="bi bi-star"></i>'.repeat(5 - rounded);
 }
 
@@ -208,7 +223,8 @@ function showFeedbackDetails(index) {
     if (!row) return;
     document.getElementById("feedbackDetailsTitle").textContent = feedbackTitle(row);
     document.getElementById("feedbackDetailsCategory").textContent = feedbackCategory(row);
-    document.getElementById("feedbackDetailsRating").innerHTML = `${ratingStars(feedbackRating(row))}<strong>${feedbackRating(row).toFixed(1)} / 5</strong>`;
+    const rating = feedbackRating(row);
+    document.getElementById("feedbackDetailsRating").innerHTML = `${ratingStars(rating)}<strong>${feedbackRatingLabel(rating)}${rating === null ? "" : " / 5"}</strong>`;
     document.getElementById("feedbackDetailsDescription").textContent = feedbackDescription(row) || "No description was provided.";
     document.getElementById("feedbackDetailsId").textContent = feedbackId(row) || "-";
     document.getElementById("feedbackDetailsUser").textContent = feedbackUser(row) || "-";

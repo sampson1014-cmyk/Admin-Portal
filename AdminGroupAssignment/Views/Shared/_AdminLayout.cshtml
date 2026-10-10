@@ -1,9 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 
 <head>
 
     <meta charset="utf-8" />
+    <meta name="admin-request-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0" />
@@ -27,6 +29,7 @@
 
     <!-- Page Specific CSS -->
     @RenderSection("Styles", required: false)
+    <link rel="stylesheet" href="~/css/portal-polish.css" asp-append-version="true" />
 
 </head>
 
@@ -94,7 +97,9 @@
 
             <div class="sidebar-bottom">
                 <div class="sidebar-profile"><span class="profile-avatar">@adminInitial</span><span class="profile-copy"><strong>@adminName</strong><small>Administrator</small></span></div>
-                <a asp-controller="Admin" asp-action="Logout" class="logout-link" title="Sign out"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
+                <form asp-controller="Admin" asp-action="Logout" method="post" class="logout-form">
+                    <button type="submit" class="logout-link" title="Sign out" aria-label="Sign out"><i class="bi bi-box-arrow-right"></i><span>Logout</span></button>
+                </form>
             </div>
         </aside>
         <button type="button" class="sidebar-scrim" id="scrim" aria-label="Close navigation"></button>
@@ -161,7 +166,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
 
+    <script src="~/js/admin-request-security.js" asp-append-version="true"></script>
     <script src="~/js/admin.js" asp-append-version="true"></script>
+    <script src="~/js/admin-list-sort.js" asp-append-version="true"></script>
 
 
     <!-- =====================================================

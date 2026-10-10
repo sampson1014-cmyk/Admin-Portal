@@ -2,12 +2,29 @@
 using System.Text;
 using System.Text.Json;
 using AdminGroupAssignment.Models;
+using AdminGroupAssignment.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AdminGroupAssignment.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class AdminController : Controller
     {
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (!string.Equals(context.ActionDescriptor.RouteValues["action"], nameof(LoginPage), StringComparison.OrdinalIgnoreCase)
+                && !IsLoggedIn())
+            {
+                context.Result = !HttpMethods.IsGet(Request.Method) || IsAjaxRequest()
+                    || Request.Headers.Accept.ToString().Contains("application/json", StringComparison.OrdinalIgnoreCase)
+                    ? Unauthorized(new { success = false, message = "Your session has expired. Please sign in again." })
+                    : RedirectToAction(nameof(LoginPage));
+                return;
+            }
+            base.OnActionExecuting(context);
+        }
+
         // =========================================================
         // CONFIGURATION
         // =========================================================
@@ -204,7 +221,7 @@ namespace AdminGroupAssignment.Controllers
         // LOGOUT
         // =========================================================
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -433,7 +450,7 @@ namespace AdminGroupAssignment.Controllers
                     ["StampCampaigns"] =
                         () =>
                             GetApiJson(
-                                "/api/ManageStamp/GetAllStamps"
+                                "/api/ManageStamp/GetAllStampPortal"
                             ),
 
                     ["Banners"] =
@@ -2076,13 +2093,8 @@ namespace AdminGroupAssignment.Controllers
                         throw new ApiException(400, "Invalid staff data.");
                     }
 
-                    // The external API exposes CreateStaff as an upsert keyed by
-                    // PhoneNumber. The Staff page keeps the original phone locked
-                    // while editing so this updates the intended staff account.
-                    return PostOrPutApiJson(
-                        "/api/ManageStaff/CreateStaff",
-                        body
-                    );
+                    // CreateStaff creates a new account; it must never be used as an edit.
+                    throw new ApiException(501, "Staff editing is unavailable because the provider has no update endpoint. No changes were sent.");
                 }
             );
 
@@ -2311,7 +2323,7 @@ namespace AdminGroupAssignment.Controllers
         [HttpGet]
         public Task<IActionResult> StampCampaigns() =>
             PageOrJson(
-                "/api/ManageStamp/GetAllStamps"
+                "/api/ManageStamp/GetAllStampPortal"
             );
 
         [HttpPost]
@@ -2424,6 +2436,16 @@ namespace AdminGroupAssignment.Controllers
                 "/api/ManageVersion/GetAllVersion"
             );
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public Task<IActionResult> UpdateAppVersion([FromBody] UpdateVersionRequest? body) =>
+            Proxy(() =>
+            {
+                if (body == null || !ModelState.IsValid)
+                    throw new ApiException(400, "Enter both build numbers, non-negative version codes and the provider's update setting.");
+                return PostApiJson("/api/ManageVersion/UpdateVersion", body);
+            });
+
 
         [HttpGet]
         public IActionResult Transactions() =>
@@ -2505,10 +2527,7 @@ namespace AdminGroupAssignment.Controllers
                         NotificationBody = notificationBody
                     });
 
-                    return PostOrPutApiJson(
-                        "/api/MerchantCreateNotification/CreateNotificationAll",
-                        payload
-                    );
+                    return SharedLocalBackend.SendAsync(_httpClientFactory, _configuration, "/admin/notifications/all", payload);
                 }
             );
 
@@ -2531,9 +2550,9 @@ namespace AdminGroupAssignment.Controllers
                     if (string.IsNullOrWhiteSpace(notificationBody)) notificationBody = GetString(body, "Body");
                     if (string.IsNullOrWhiteSpace(notificationBody)) notificationBody = GetString(body, "Message");
 
-                    if (string.IsNullOrWhiteSpace(deviceId) || string.IsNullOrWhiteSpace(header) || string.IsNullOrWhiteSpace(notificationBody))
+                    if (string.IsNullOrWhiteSpace(GetString(body, "PhoneNumber")) || string.IsNullOrWhiteSpace(header) || string.IsNullOrWhiteSpace(notificationBody))
                     {
-                        throw new ApiException(400, "Device ID, notification title, and message are required.");
+                        throw new ApiException(400, "Member phone number, notification title, and message are required.");
                     }
 
                     JsonElement payload = JsonSerializer.SerializeToElement(new
@@ -2546,10 +2565,7 @@ namespace AdminGroupAssignment.Controllers
                         NotificationBody = notificationBody
                     });
 
-                    return PostOrPutApiJson(
-                        "/api/MerchantCreateNotification/CreateNotificationByDeviceId",
-                        payload
-                    );
+                    return SharedLocalBackend.SendAsync(_httpClientFactory, _configuration, "/admin/notifications/member", payload);
                 }
             );
 
@@ -2582,10 +2598,7 @@ namespace AdminGroupAssignment.Controllers
                         Text = text
                     });
 
-                    return PostOrPutApiJson(
-                        "/api/MemberNotification/SendNotifications",
-                        payload
-                    );
+                    return SharedLocalBackend.SendAsync(_httpClientFactory, _configuration, "/admin/notifications/all", payload);
                 }
             );
 
@@ -2593,6 +2606,48 @@ namespace AdminGroupAssignment.Controllers
         [HttpGet]
         public IActionResult DataImport() =>
             LoggedInView();
+
+        [HttpGet]
+        public IActionResult ImportSchemas()
+        {
+            if (!IsLoggedIn()) return Unauthorized(new { success = false, message = "Session expired." });
+            return Json(MigrationContracts.All.Select(MigrationContracts.ForArchive).Select(item => new { item.Kind, item.Label, item.Fields }));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RequestSizeLimit(2 * 1024 * 1024)]
+        public Task<IActionResult> ImportRow(string kind, [FromBody] JsonElement body) =>
+            Proxy(() =>
+            {
+                var contract = MigrationContracts.Find(kind);
+                if (contract == null) throw new ApiException(400, "Choose a supported migration type.");
+                try { return SharedLocalBackend.SendAsync(_httpClientFactory, _configuration, "/admin/imports/" + Uri.EscapeDataString(kind), MigrationContracts.Validate(MigrationContracts.ForArchive(contract), body)); }
+                catch (ArgumentException ex) { throw new ApiException(400, ex.Message); }
+            });
+
+        [HttpGet]
+        public Task<IActionResult> ImportArchive(string? kind) => Proxy(() =>
+            SharedLocalBackend.SendAsync(_httpClientFactory, _configuration,
+                "/admin/imports" + (string.IsNullOrWhiteSpace(kind) ? "" : "?kind=" + Uri.EscapeDataString(kind))));
+
+        [HttpGet]
+        public Task<IActionResult> FindMemberByPhone(string phone) => Proxy(() =>
+            string.IsNullOrWhiteSpace(phone) || phone.Length > 30
+                ? throw new ApiException(400, "Enter a phone number.")
+                : PostApiJson("/api/ManageMember/FindMemberByPhone", new { PhoneNumber = phone.Trim() }));
+
+        [HttpGet]
+        public Task<IActionResult> FindMemberByEmail(string email) => Proxy(() =>
+            string.IsNullOrWhiteSpace(email) || email.Length > 254 || !email.Contains('@')
+                ? throw new ApiException(400, "Enter an email address.")
+                : PostApiJson("/api/ManageMember/FindMemberByEmail", new { Email = email.Trim() }));
+
+        [HttpGet]
+        public Task<IActionResult> FindOutletsByPhone(string phone) => Proxy(() =>
+            string.IsNullOrWhiteSpace(phone) || phone.Length > 30
+                ? throw new ApiException(400, "Enter an outlet phone number.")
+                : PostApiJson("/api/ManageOutlets/FindOutletsByPhone", new { Phonenunber = phone.Trim() }));
 
 
         // =========================================================
@@ -2953,6 +3008,11 @@ namespace AdminGroupAssignment.Controllers
             }
 
 
+            string? failure = ApiResponseValidation.GetFailure(body);
+            if (failure != null)
+            {
+                throw new ApiException(422, failure);
+            }
             return body;
         }
 

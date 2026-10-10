@@ -137,9 +137,10 @@ async function saveVoucher(event) {
     const row = editingVoucherIndex === null ? null : voucherRows[editingVoucherIndex];
     const description = document.getElementById("voucherDescription").value.trim();
     const descriptionIos = document.getElementById("voucherDescriptionIos").value.trim();
-    const payload = { ...(row || {}), Name: document.getElementById("voucherName").value.trim(), Title: document.getElementById("voucherTitle").value.trim(), ShortTitle: document.getElementById("voucherShortTitle").value.trim(), SubTitle: document.getElementById("voucherSubTitle").value.trim(), Point: Number(document.getElementById("voucherPoint").value), Category: document.getElementById("voucherCategoryInput").value.trim() || "All", Status: document.getElementById("voucherStatusInput").value, Image: document.getElementById("voucherImage").value.trim(), ImageByte: row ? voucherValue(row, "ImageByte") : "", CreateDate: voucherIsoDate(document.getElementById("voucherCreateDate").value), ExpireDate: voucherIsoDate(document.getElementById("voucherExpireDate").value), Description: description, DescriptionIOS: descriptionIos || description || "No description provided.", TnC: document.getElementById("voucherTnc").value.trim(), Type: "Voucher" };
+    const payload = { ...(row || {}), Name: document.getElementById("voucherName").value.trim(), Title: document.getElementById("voucherTitle").value.trim(), ShortTitle: document.getElementById("voucherShortTitle").value.trim(), SubTitle: document.getElementById("voucherSubTitle").value.trim(), Point: Number(document.getElementById("voucherPoint").value), Category: document.getElementById("voucherCategoryInput").value.trim() || "All", Status: document.getElementById("voucherStatusInput").value, Image: document.getElementById("voucherImage").value.trim(), ImageByte: row ? voucherValue(row, "ImageByte") : "", CreateDate: voucherIsoDate(document.getElementById("voucherCreateDate").value, row ? voucherCreated(row) : null), ExpireDate: voucherIsoDate(document.getElementById("voucherExpireDate").value, row ? voucherExpires(row) : null), Description: description, DescriptionIOS: descriptionIos || description || "No description provided.", TnC: document.getElementById("voucherTnc").value.trim(), Type: "Voucher" };
     if (row) payload.Id = voucherId(row);
     const button = document.getElementById("saveVoucher");
+    const previousIds = new Set(voucherRows.map(voucherId));
     setVoucherButtonBusy(button, true, row ? "Saving..." : "Creating...");
     try {
         const response = await fetch(row ? "/Admin/EditVoucher" : "/Admin/CreateVoucher", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
@@ -147,7 +148,14 @@ async function saveVoucher(event) {
         if (!response.ok || data?.success === false) throw new Error(voucherApiMessage(data, `Unable to ${row ? "update" : "create"} the voucher.`));
         bootstrap.Modal.getInstance(document.getElementById("voucherFormModal"))?.hide();
         await loadVouchers();
-        showVoucherMessage(`Voucher ${row ? "updated" : "created"} successfully.`, "success");
+        const savedRows = voucherRows.filter(item => row
+            ? voucherId(item) === voucherId(row)
+            : !previousIds.has(voucherId(item)) && voucherName(item) === payload.Name);
+        if (savedRows.length === 1 && !voucherSavedPointMatches(savedRows[0], payload.Point)) {
+            showVoucherMessage("Voucher saved, but its point cost was not preserved. Open Edit to correct the points before members redeem it.", "warning");
+        } else if (savedRows.length !== 1) {
+            showVoucherMessage("The save request was accepted. Refresh and check the voucher details before submitting again.", "warning");
+        } else showVoucherMessage(`Voucher ${row ? "updated" : "created"} successfully.`, "success");
     } catch (error) { const message = error.message || "Unable to save the voucher."; errorBox.textContent = /Failed to fetch|404|not found/i.test(message) ? "The running server does not have the latest voucher actions. Restart the project, sign in again, and retry." : message; errorBox.hidden = false; }
     finally { setVoucherButtonBusy(button, false, row ? "Save changes" : "Create voucher"); }
 }
@@ -160,7 +168,14 @@ function exportVouchers() { const rows = visibleVouchers(); if (!rows.length) re
 function voucherTimestamp(value) { if (!value) return 0; const dotNet = /\/Date\((\d+)(?:[+-]\d+)?\)\//.exec(String(value)); if (dotNet) return Number(dotNet[1]); const parsed = new Date(value).getTime(); return Number.isNaN(parsed) ? 0 : parsed; }
 function formatVoucherDate(value, fallback = "-") { const time = voucherTimestamp(value); return time ? new Date(time).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" }) : fallback; }
 function voucherDateInput(value) { const time = value instanceof Date ? value.getTime() : voucherTimestamp(value); if (!time) return ""; const date = new Date(time - new Date(time).getTimezoneOffset() * 60000); return date.toISOString().slice(0, 16); }
-function voucherIsoDate(value) { return value ? new Date(value).toISOString() : null; }
+function voucherIsoDate(value, original = null) {
+    if (original && value === voucherDateInput(original)) return original;
+    return value ? new Date(value).toISOString() : null;
+}
+function voucherSavedPointMatches(row, expected) {
+    const saved = voucherValue(row, "Point");
+    return saved !== "" && Number(saved) === expected;
+}
 function voucherExpiryLabel(row) { const time = voucherTimestamp(voucherExpires(row)); if (!time) return "No expiry date"; if (time < Date.now()) return "Expired"; const days = Math.ceil((time - Date.now()) / 86400000); return days <= 30 ? `${days} days remaining` : "Expiry date"; }
 function safeVoucherImage(value) { const image = String(value || "").trim(); return /^(https?:\/\/|data:image\/)/i.test(image) ? image : ""; }
 function setVouchersLoading(show) { vouchersLoading = show; document.getElementById("voucherLoading").hidden = !show; const button = document.getElementById("refreshVouchers"); button.querySelector("span").textContent = show ? "Cancel" : "Refresh"; button.querySelector("i").className = show ? "bi bi-x-lg" : "bi bi-arrow-clockwise"; if (show) { document.getElementById("voucherTableWrapper").hidden = true; document.getElementById("voucherEmpty").hidden = true; document.getElementById("exportVouchers").disabled = true; } }

@@ -50,6 +50,8 @@
      SUMMARY
 ========================================================= -->
 
+<partial name="_ApiLookup" model='@("members")' />
+
 <section class="mb-stats">
 
     <div class="mb-stat-card">
@@ -222,6 +224,7 @@
                     </th>
 
                     <th class="action-col">
+                        Action
                     </th>
 
                 </tr>
@@ -516,6 +519,7 @@
 
 
 @section Scripts {
+    <script src="~/js/lookup-records.js" asp-append-version="true"></script>
 
     <script src="~/js/members.js"
             asp-append-version="true">

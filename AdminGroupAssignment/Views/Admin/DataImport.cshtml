@@ -1,7 +1,7 @@
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Data Import";
-    ViewData["Subtitle"] = "Validate a CSV file and create member accounts in a controlled batch.";
+    ViewData["Subtitle"] = "Validate and archive records locally without changing live accounts or balances.";
 }
 
 @section Styles { <link rel="stylesheet" href="~/css/data-import.css" asp-append-version="true" /> }
@@ -11,11 +11,25 @@
 }
 
 <div class="import-page">
+    <section class="import-panel p-3">
+        <h2>Local import archive</h2>
+        <p>Saved rows remain separate from the API owner's database. They do not create live accounts or change balances. Passwords and tokens are omitted from saved rows and exports.</p>
+        <button type="button" class="btn" id="refreshImportArchive">Refresh archive</button>
+        <button type="button" class="btn" id="exportImportArchive">Export archive JSON</button>
+        <p id="importArchiveSummary" role="status">Loading saved import history…</p>
+    </section>
     <div id="importMessage" class="import-message" role="alert" hidden></div>
+    <form id="migrationToken" hidden>@Html.AntiForgeryToken()</form>
+    <section class="import-panel p-3">
+        <label for="importKind">Records to migrate</label>
+        <select id="importKind" class="form-select" disabled><option>Loading migration formats…</option></select>
+        <p id="importSchemaHelp" class="mt-2">Use the template for the selected record type. No values will be invented for missing data.</p>
+        <p>Choose a format to validate and save rows in the local archive. Live member and merchant records stay API-backed.</p>
+    </section>
 
     <section class="import-guide">
-        <div class="import-guide-copy"><span>MEMBER CSV IMPORT</span><h2>Prepare and validate your member data</h2><p>Upload a CSV file using the template. Every row is checked before anything is sent to the API.</p></div>
-        <ol><li><strong>1</strong><span>Download template</span></li><li><strong>2</strong><span>Add member data</span></li><li><strong>3</strong><span>Validate and import</span></li></ol>
+        <div class="import-guide-copy"><span>DATA MIGRATION</span><h2>Prepare and validate your records</h2><p>Choose a record type and use its template. Each row is validated before import.</p></div>
+        <ol><li><strong>1</strong><span>Download template</span></li><li><strong>2</strong><span>Add record data</span></li><li><strong>3</strong><span>Validate and import</span></li></ol>
     </section>
 
     <section class="import-panel">
@@ -33,10 +47,10 @@
         <div class="import-results" id="importResults" hidden>
             <div class="import-summary"><article><small>Total rows</small><strong id="importTotal">0</strong></article><article class="valid"><small>Ready</small><strong id="importValid">0</strong></article><article class="invalid"><small>Needs attention</small><strong id="importInvalid">0</strong></article></div>
             <div class="import-table-heading"><div><h3>Validation preview</h3><p id="importResultText"></p></div><label><input type="checkbox" id="showInvalidOnly" /> Show errors only</label></div>
-            <div class="import-table-wrap"><table class="import-table"><thead><tr><th>Row</th><th>Name</th><th>Email</th><th>Phone</th><th>Tier</th><th>Status</th><th>Validation</th></tr></thead><tbody id="importTableBody"></tbody></table></div>
+            <div class="import-table-wrap"><table class="import-table"><thead><tr><th>Row</th><th>Record preview</th><th>Validation</th></tr></thead><tbody id="importTableBody"></tbody></table></div>
             <div class="import-footer"><div class="import-progress-copy"><strong id="importProgressTitle">Ready to import</strong><span id="importProgressText">Only valid rows will be created.</span><div class="import-progress-track" id="importProgressTrack" hidden><span id="importProgressBar"></span></div></div><button type="button" class="btn btn-primary" id="startMemberImport"><i class="bi bi-cloud-arrow-up"></i><span>Import valid members</span></button></div>
         </div>
     </section>
 </div>
 
-@section Scripts { <script src="~/js/data-import.js" asp-append-version="true"></script> }
+@section Scripts { <script src="~/js/migration-import.js" asp-append-version="true"></script> }

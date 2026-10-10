@@ -80,7 +80,8 @@ button, input, select, textarea { font: inherit; }
 .profile-copy { display: flex; min-width: 0; flex-direction: column; }
 .profile-copy strong { overflow: hidden; color: #fff; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .profile-copy small { margin-top: 2px; color: rgba(255,255,255,.43); font-size: 9px; }
-.logout-link { display: grid; width: 42px; height: 42px; align-self: center; place-items: center; border-radius: 11px; color: rgba(255,255,255,.58); text-decoration: none; }
+.logout-form { margin: 0; align-self: center; }
+.logout-link { display: grid; width: 42px; height: 42px; align-self: center; place-items: center; border: 0; background: transparent; cursor: pointer; border-radius: 11px; color: rgba(255,255,255,.58); text-decoration: none; }
 .logout-link span { display: none; }
 .logout-link:hover { color: #ffc1c1; background: rgba(207,83,83,.14); }
 .sidebar-scrim { display: none; }

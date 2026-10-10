@@ -1,7 +1,7 @@
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Notifications";
-    ViewData["Subtitle"] = "Send announcements to everyone or a specific member device.";
+    ViewData["Subtitle"] = "Send inbox messages to everyone or a specific member.";
 }
 
 @section Styles {
@@ -9,7 +9,7 @@
 }
 
 <div class="notification-page">
-    <section class="notification-heading"><div><h2>Send Notification</h2><p>Create a push notification for your members.</p></div><span class="notification-api-status"><i class="bi bi-shield-check"></i> JWT protected</span></section>
+    <section class="notification-heading"><div><h2>Send a member message</h2><p>Messages are saved in the shared Eduvo inbox. This does not send phone push alerts.</p></div><span class="notification-api-status"><i class="bi bi-shield-check"></i> Protected inbox</span></section>
     <div id="notificationMessage" class="notification-message" hidden></div>
 
     <div class="notification-layout">
@@ -18,21 +18,23 @@
                 <div class="notification-section">
                     <h3>Audience</h3><p>Choose who should receive this notification.</p>
                     <div class="audience-grid">
-                        <label class="audience-option"><input type="radio" name="audience" value="all" checked /><span><i class="bi bi-people"></i><strong>Everyone</strong><small>Send to all registered devices</small></span></label>
-                        <label class="audience-option"><input type="radio" name="audience" value="device" /><span><i class="bi bi-phone"></i><strong>One Device</strong><small>Send using a device ID</small></span></label>
+                        <label class="audience-option"><input type="radio" name="audience" value="all" checked /><span><i class="bi bi-people"></i><strong>Everyone</strong><small>All member inboxes</small></span></label>
+                        <label class="audience-option"><input type="radio" name="audience" value="device" /><span><i class="bi bi-phone"></i><strong>One member</strong><small>Send using their phone number</small></span></label>
                     </div>
                 </div>
 
                 <div class="notification-section target-section" id="notificationTargetSection" hidden>
-                    <label for="notificationTarget">Device ID</label>
-                    <input class="form-control" id="notificationTarget" placeholder="Enter a member's active device ID" />
+                    <input id="notificationTarget" type="hidden" />
+                    <label for="notificationPhone" class="mt-3">Member phone number</label>
+                    <input class="form-control" id="notificationPhone" type="tel" placeholder="+60123456789" />
+                    <small>Use the member's registered phone number. No device ID is needed.</small>
                 </div>
 
                 <div class="notification-section">
                     <h3>Message</h3><p>Write the content shown in the member application.</p>
                     <div class="mb-3"><label for="notificationTitle">Title</label><input class="form-control" id="notificationTitle" maxlength="100" placeholder="Notification title" required /><small><span id="titleCount">0</span>/100</small></div>
                     <div class="mb-3"><label for="notificationBody">Message</label><textarea class="form-control" id="notificationBody" rows="5" maxlength="500" placeholder="Write your message" required></textarea><small><span id="bodyCount">0</span>/500</small></div>
-                    <div class="mb-3"><label for="notificationImage">Image URL <span>(optional)</span></label><input class="form-control" id="notificationImage" type="url" placeholder="https://..." /></div>
+                    <input id="notificationImage" type="hidden" />
                 </div>
 
                 <div id="notificationFormError" class="alert alert-danger" hidden></div>
@@ -43,7 +45,7 @@
         <aside class="notification-preview-card">
             <span class="preview-label">MEMBER APP PREVIEW</span>
             <div class="phone-preview"><div class="phone-speaker"></div><div class="preview-app"><span class="preview-icon"><i class="bi bi-shop"></i></span><div><strong>EduvoShop</strong><small>now</small></div></div><h4 id="previewTitle">Notification title</h4><p id="previewBody">Your message will appear here.</p><img id="previewImage" alt="Notification preview" hidden /></div>
-            <p class="preview-note"><i class="bi bi-info-circle"></i> Sending a notification contacts the live API immediately.</p>
+            <p class="preview-note"><i class="bi bi-info-circle"></i> Messages are stored on your shared backend, separately from API-generated notifications.</p>
         </aside>
     </div>
 </div>

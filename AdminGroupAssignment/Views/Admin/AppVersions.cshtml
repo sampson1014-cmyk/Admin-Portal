@@ -13,6 +13,23 @@
 <div class="versions-page">
     <div id="versionMessage" class="version-message" role="alert" hidden></div>
 
+    <section class="version-panel" id="versionEditor" hidden>
+        <header class="version-panel-header"><div><h2>Edit release settings</h2><p>This updates the shared Android and iOS release configuration.</p></div></header>
+        <form id="versionEditForm" class="p-3">
+            @Html.AntiForgeryToken()
+            <div class="row g-3">
+                <label class="col-md-6">Android build number<input class="form-control" name="AndroidBuildNumber" required maxlength="100" /></label>
+                <label class="col-md-6">Android version code<input class="form-control" name="AndroidVersionCode" type="number" required min="0" max="2147483647" step="1" /></label>
+                <label class="col-md-6">iOS build number<input class="form-control" name="IOSBuildNumber" required maxlength="100" /></label>
+                <label class="col-md-6">iOS version code<input class="form-control" name="IOSVersionCode" type="number" required min="0" max="2147483647" step="1" /></label>
+                <label class="col-12">Update setting<input class="form-control" name="Setting" required maxlength="1000" /><small>Keep the existing value unless your API owner has confirmed the setting used for optional or forced updates. Swagger does not define allowed values.</small></label>
+            </div>
+            <p id="versionSaveMessage" role="status" class="mt-3"></p>
+            <button class="btn btn-primary" id="saveVersion" type="submit">Save release settings</button>
+            <button class="btn" id="cancelVersionEdit" type="button">Cancel</button>
+        </form>
+    </section>
+
     <section class="version-stats">
         <article><span class="version-stat-icon"><i class="bi bi-phone"></i></span><div><small>Total releases</small><strong id="versionTotal">0</strong><p>Returned by the API</p></div></article>
         <article><span class="version-stat-icon green"><i class="bi bi-check-circle"></i></span><div><small>Active</small><strong id="versionActive">0</strong><p>Available versions</p></div></article>
@@ -31,7 +48,7 @@
         <div id="versionLoading" class="version-state"><span class="spinner-border spinner-border-sm"></span><p>Loading app versions...</p></div>
         <div id="versionEmpty" class="version-state" hidden><i class="bi bi-phone"></i><h3 id="versionEmptyTitle">No versions found</h3><p id="versionEmptyText">The API returned no version records.</p><button type="button" class="btn" id="retryVersions">Try again</button></div>
         <div class="version-table-wrap" id="versionTableWrap" hidden>
-            <table class="version-table"><thead><tr><th>Platform</th><th>Version</th><th>Minimum</th><th>Update policy</th><th>Status</th><th>Updated</th><th></th></tr></thead><tbody id="versionTableBody"></tbody></table>
+            <table class="version-table"><thead><tr><th>Platform</th><th>Version</th><th>Code / minimum</th><th>Update policy</th><th>Status</th><th>Updated</th><th>Store / edit</th></tr></thead><tbody id="versionTableBody"></tbody></table>
         </div>
     </section>
 </div>

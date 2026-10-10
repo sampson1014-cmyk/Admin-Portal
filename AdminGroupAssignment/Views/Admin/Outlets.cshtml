@@ -17,14 +17,16 @@
         </div>
     </div>
     <div id="outletMessage" class="merchant-message" hidden></div>
+    <partial name="_ApiLookup" model='@("outlets")' />
     <div class="merchant-stats">
         <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-geo-alt"></i></div><div><span>Total Outlets</span><strong id="totalOutlets">0</strong></div></div>
         <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-check-circle"></i></div><div><span>Active</span><strong id="activeOutlets">0</strong></div></div>
         <div class="merchant-stat-card"><div class="merchant-stat-icon"><i class="bi bi-x-circle"></i></div><div><span>Inactive</span><strong id="inactiveOutlets">0</strong></div></div>
     </div>
-    <div class="merchant-filter-card">
+    <div class="merchant-filter-card merchant-sortable-filters">
         <div class="merchant-search-box"><i class="bi bi-search"></i><input type="text" id="outletSearch" placeholder="Search outlet..." /></div>
         <select id="outletStatusFilter" class="merchant-filter-select"><option value="">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option></select>
+        <select id="outletSort" class="merchant-filter-select" aria-label="Sort outlets"><option value="id-asc">ID: low to high</option><option value="id-desc">ID: high to low</option><option value="name-asc">Name: A–Z</option><option value="name-desc">Name: Z–A</option></select>
         <button type="button" class="merchant-clear-btn" id="clearOutletFilters">Clear</button>
     </div>
     <div class="merchant-table-card">
@@ -50,5 +52,6 @@
 </div></div>
 
 @section Scripts {
+    <script src="~/js/lookup-records.js" asp-append-version="true"></script>
     <script src="~/js/outlets.js" asp-append-version="true"></script>
 }

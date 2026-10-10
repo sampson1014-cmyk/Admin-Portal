@@ -9,19 +9,26 @@ const staffType = item => value(item, ["staffType", "StaffType", "type", "Type"]
 const merchantId = item => value(item, ["merchantId", "MerchantId"]);
 const staffEmail = item => value(item, ["email", "Email"]);
 const staffPhone = item => value(item, ["phoneNumber", "PhoneNumber", "phone", "Phone"]);
-const staffStatus = item => value(item, ["status", "Status", "accountStatus", "AccountStatus"], "Active");
+const staffStatus = item => String(value(item, ["status", "Status", "accountStatus", "AccountStatus"])).trim() || "Not reported";
 const isActive = item => ["active", "activated", "enabled"].includes(String(staffStatus(item)).trim().toLowerCase());
+const isInactive = item => ["inactive", "deactivated", "disabled"].includes(staffStatus(item).toLowerCase());
+const matchesStaffStatus = (item, selected) => !selected || (selected === "active" ? isActive(item) : selected === "inactive" ? isInactive(item) : selected === "unknown" && !isActive(item) && !isInactive(item));
 const normalizedPhone = phone => String(phone || "").replace(/\D/g, "");
 const escapeHtml = text => String(text ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+const displayStaffValue = value => escapeHtml(String(value ?? "").trim() || "Empty");
 
 document.addEventListener("DOMContentLoaded", () => {
+    const unknownStatus = document.createElement("option");
+    unknownStatus.value = "unknown";
+    unknownStatus.textContent = "Not reported / other";
+    document.getElementById("staffStatusFilter").appendChild(unknownStatus);
     document.getElementById("refreshStaff").addEventListener("click", loadStaff);
     document.getElementById("addStaffButton").addEventListener("click", () => openStaffForm());
     document.getElementById("closeStaffModal").addEventListener("click", closeStaffForm);
     document.getElementById("cancelStaffModal").addEventListener("click", closeStaffForm);
     document.getElementById("staffModal").addEventListener("click", event => { if (event.target.id === "staffModal") closeStaffForm(); });
     document.getElementById("staffForm").addEventListener("submit", saveStaff);
-    ["staffSearch", "staffMerchantFilter", "staffTypeFilter", "staffStatusFilter"].forEach(id => {
+    ["staffSearch", "staffMerchantFilter", "staffTypeFilter", "staffStatusFilter", "staffSort"].forEach(id => {
         const control = document.getElementById(id);
         control.addEventListener(id === "staffSearch" ? "input" : "change", filterStaff);
     });
@@ -32,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const item = staffRows.find(row => String(staffId(row)) === button.dataset.staffId);
         if (!item) return;
         if (button.dataset.action === "delete") removeStaff(item);
-        if (button.dataset.action === "edit") openStaffForm(item);
     });
     initializeStaff();
 });
@@ -78,11 +84,14 @@ function filterStaff() {
         const matchesSearch = !search || searchable.includes(search);
         const matchesMerchant = !selectedMerchant || String(merchantId(item)) === selectedMerchant;
         const matchesType = !selectedType || String(staffType(item)).toLowerCase() === selectedType;
-        const matchesStatus = !selectedStatus || (selectedStatus === "active" ? isActive(item) : !isActive(item));
+        const matchesStatus = matchesStaffStatus(item, selectedStatus);
         return matchesSearch && matchesMerchant && matchesType && matchesStatus;
     });
+    visibleStaff = window.AdminListSort(visibleStaff, document.getElementById("staffSort").value, staffName, staffId);
     document.getElementById("totalStaff").textContent = staffRows.length;
-    document.getElementById("activeStaff").textContent = staffRows.filter(isActive).length;
+    const reportedStatuses = staffRows.filter(item => isActive(item) || isInactive(item));
+    document.getElementById("activeStaff").textContent = reportedStatuses.length ? staffRows.filter(isActive).length : "Not reported";
+    document.getElementById("activeStaff").title = `${reportedStatuses.length} of ${staffRows.length} staff records have a recognized status from the API.`;
     document.getElementById("staffMerchantCount").textContent = new Set(staffRows.map(merchantId).filter(Boolean)).size;
     renderStaff();
 }
@@ -92,6 +101,7 @@ function clearStaffFilters() {
     document.getElementById("staffMerchantFilter").value = "";
     document.getElementById("staffTypeFilter").value = "";
     document.getElementById("staffStatusFilter").value = "";
+    document.getElementById("staffSort").value = "id-asc";
     filterStaff();
 }
 
@@ -100,7 +110,10 @@ function renderStaff() {
     document.getElementById("staffResultText").textContent = `${visibleStaff.length} of ${staffRows.length} staff member(s) shown.`;
     if (!visibleStaff.length) { body.innerHTML = ""; wrapper.hidden = true; setState("No Staff", staffRows.length ? "No staff records match the current filters." : "No staff records were found."); return; }
     document.getElementById("staffState").hidden = true; wrapper.hidden = false;
-    body.innerHTML = visibleStaff.map(item => `<tr><td>${escapeHtml(staffId(item))}<br><small>${escapeHtml(staffCode(item))}</small></td><td><strong>${escapeHtml(staffName(item))}</strong></td><td>${escapeHtml(staffType(item))}</td><td>${escapeHtml(merchantLabel(merchantId(item)))}</td><td>${staffEmail(item) ? `${escapeHtml(staffEmail(item))}<br>` : ""}<small>${escapeHtml(staffPhone(item))}</small></td><td><span class="merchant-status ${isActive(item) ? "active" : "inactive"}">${escapeHtml(staffStatus(item))}</span></td><td class="text-end"><div class="outlet-action-buttons"><button type="button" class="outlet-action-btn outlet-edit-btn" data-action="edit" data-staff-id="${escapeHtml(staffId(item))}" title="Edit staff"><i class="bi bi-pencil-square"></i></button><button type="button" class="outlet-action-btn outlet-delete-btn" data-action="delete" data-staff-id="${escapeHtml(staffId(item))}" title="Delete staff"><i class="bi bi-trash3"></i></button></div></td></tr>`).join("");
+    body.innerHTML = visibleStaff.map(item => `<tr><td>${displayStaffValue(staffId(item))}<br><small>${displayStaffValue(staffCode(item))}</small></td><td><strong>${displayStaffValue(staffName(item))}</strong></td><td>${displayStaffValue(staffType(item))}</td><td>${displayStaffValue(merchantLabel(merchantId(item)))}</td><td>${displayStaffValue(staffEmail(item))}<br><small>${displayStaffValue(staffPhone(item))}</small></td><td><span class="merchant-status ${isActive(item) ? "active" : "inactive"}">${escapeHtml(staffStatus(item))}</span></td><td class="text-end"><div class="outlet-action-buttons"><button type="button" class="outlet-action-btn outlet-delete-btn" data-action="delete" data-staff-id="${escapeHtml(staffId(item))}" title="Delete staff"><i class="bi bi-trash3"></i></button></div></td></tr>`).join("");
+    body.querySelectorAll('tr').forEach((row, index) => {
+        if (!isActive(visibleStaff[index]) && !isInactive(visibleStaff[index])) row.querySelector('.merchant-status').classList.remove('inactive');
+    });
 }
 
 function merchantLabel(id) {
@@ -110,18 +123,14 @@ function merchantLabel(id) {
 function setState(title, text) { document.getElementById("staffStateTitle").textContent = title; document.getElementById("staffStateText").textContent = text; document.getElementById("staffState").hidden = false; }
 
 function openStaffForm(item = null) {
-    editingStaff = item;
-    const form = document.getElementById("staffForm"), phone = document.getElementById("staffPhone");
-    form.reset(); setFormError("");
-    document.getElementById("staffModalTitle").textContent = item ? "Edit Staff" : "Add Staff";
-    document.getElementById("saveStaffButton").textContent = item ? "Save Changes" : "Create Staff";
-    document.getElementById("staffMerchantId").value = item ? String(merchantId(item)) : "";
-    document.getElementById("staffName").value = item ? staffName(item) : "";
-    document.getElementById("staffType").value = item && ["Staff", "Manager", "Admin"].includes(String(staffType(item))) ? staffType(item) : "Staff";
-    phone.value = item ? staffPhone(item) : "";
-    phone.readOnly = Boolean(item);
-    document.getElementById("staffPhoneHint").textContent = item ? "Phone number is locked because the API uses it to identify the staff account." : "Phone numbers must be unique.";
-    document.getElementById("staffPassword").value = "";
+    if (item) { notify("Staff editing is unavailable. No changes were sent.", "error", false); return; }
+    editingStaff = null;
+    document.getElementById("staffForm").reset(); setFormError("");
+    document.getElementById("staffModalTitle").textContent = "Add Staff";
+    document.getElementById("saveStaffButton").textContent = "Create Staff";
+    document.getElementById("staffMerchantId").value = "";
+    document.getElementById("staffType").value = "Staff";
+    document.getElementById("staffPhone").readOnly = false;
     document.getElementById("staffModal").hidden = false;
     document.body.classList.add("outlet-dialog-open");
     document.getElementById("staffName").focus();
@@ -137,18 +146,20 @@ function closeStaffForm() {
 
 async function saveStaff(event) {
     event.preventDefault(); setFormError("");
+    if (editingStaff) { setFormError("Staff editing is unavailable. No changes were sent."); return; }
     const merchant = document.getElementById("staffMerchantId").value;
     const name = document.getElementById("staffName").value.trim();
     const type = document.getElementById("staffType").value;
     const phone = document.getElementById("staffPhone").value.trim();
     const password = document.getElementById("staffPassword").value;
-    if (!merchant || !name || !phone || !password) { setFormError("Merchant, staff name, phone number, and password are required."); return; }
+    if (!name || name.length > 120) { setFormError("Enter a staff name of 1–120 characters."); return; }
+    if (!merchant || !phone || !password) { setFormError("Merchant, staff name, phone number, and password are required when creating staff."); return; }
     if (normalizedPhone(phone).length < 7) { setFormError("Enter a valid phone number."); return; }
     if (editingStaff && normalizedPhone(phone) !== normalizedPhone(staffPhone(editingStaff))) { setFormError("The phone number cannot be changed while editing because the API uses it to identify the staff account."); return; }
     if (!editingStaff) {
         const duplicate = staffRows.find(item => normalizedPhone(staffPhone(item)) === normalizedPhone(phone));
         if (duplicate) {
-            setFormError(`This phone number already belongs to ${staffName(duplicate) || "another staff member"} (ID ${staffId(duplicate)}). Use Edit on that record instead.`);
+            setFormError(`This phone number already belongs to ${staffName(duplicate) || "another staff member"} (ID ${staffId(duplicate)}). Use a different phone number for a new staff account.`);
             return;
         }
     }
@@ -157,15 +168,15 @@ async function saveStaff(event) {
     const editing = Boolean(editingStaff), button = document.getElementById("saveStaffButton");
     button.disabled = true; button.textContent = editing ? "Saving..." : "Creating...";
     try {
-        const response = await window.adminFetch(editing ? "/Admin/EditStaff" : "/Admin/CreateStaff", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
+        const response = await window.adminFetch("/Admin/CreateStaff", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
         const data = await readJson(response);
         if (!response.ok || data?.success === false) throw new Error(apiMessage(data, editing ? "Unable to update staff." : "Unable to create staff."));
         document.getElementById("staffModal").hidden = true; document.body.classList.remove("outlet-dialog-open"); editingStaff = null;
         document.getElementById("staffSearch").value = ""; document.getElementById("staffMerchantFilter").value = merchant;
         await loadStaff();
-        notify(editing ? "Staff updated successfully." : "Staff created successfully.", "success");
+        notify("Staff created successfully.", "success");
     } catch (error) { setFormError(error.message || (editing ? "Unable to update staff." : "Unable to create staff.")); }
-    finally { button.disabled = false; button.textContent = editing ? "Save Changes" : "Create Staff"; }
+    finally { button.disabled = false; button.textContent = "Create Staff"; }
 }
 
 async function removeStaff(item) {

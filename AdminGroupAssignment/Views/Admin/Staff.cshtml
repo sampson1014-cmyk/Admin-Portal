@@ -10,7 +10,7 @@
 
 <div class="merchant-list-page">
     <div class="merchant-list-header">
-        <div><h2>Staff</h2><p>View, add, edit, and remove merchant staff accounts.</p></div>
+        <div><h2>Staff</h2><p>View, add, and remove merchant staff accounts.</p></div>
         <div class="merchant-header-actions">
             <button type="button" class="merchant-refresh-btn" id="refreshStaff"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
             <button type="button" class="merchant-add-btn" id="addStaffButton"><i class="bi bi-plus-lg"></i> Add Staff</button>
@@ -30,6 +30,7 @@
         <select id="staffMerchantFilter" class="merchant-filter-select"><option value="">All Merchants</option></select>
         <select id="staffTypeFilter" class="merchant-filter-select" aria-label="Filter by staff type"><option value="">All Types</option><option value="Staff">Staff</option><option value="Manager">Manager</option><option value="Admin">Admin</option></select>
         <select id="staffStatusFilter" class="merchant-filter-select" aria-label="Filter by status"><option value="">All Statuses</option><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
+        <select id="staffSort" class="merchant-filter-select" aria-label="Sort staff"><option value="id-asc">ID: low to high</option><option value="id-desc">ID: high to low</option><option value="name-asc">Name: A–Z</option><option value="name-desc">Name: Z–A</option></select>
         <button type="button" class="merchant-clear-btn" id="clearStaffFilters">Clear</button>
     </div>
 
@@ -47,7 +48,7 @@
         <div class="mb-3"><label for="staffName" class="form-label">Staff Name</label><input type="text" class="form-control" id="staffName" placeholder="Enter staff name" required /></div>
         <div class="mb-3"><label for="staffType" class="form-label">Staff Type</label><select class="form-select" id="staffType" required><option value="Staff">Staff</option><option value="Manager">Manager</option><option value="Admin">Admin</option></select></div>
         <div class="mb-3"><label for="staffPhone" class="form-label">Phone Number</label><input type="text" class="form-control" id="staffPhone" placeholder="Enter phone number" required /><small id="staffPhoneHint" class="form-text text-muted">Phone numbers must be unique.</small></div>
-        <div class="mb-3"><label for="staffPassword" class="form-label">Password</label><input type="password" class="form-control" id="staffPassword" placeholder="Enter password" required /><small class="form-text text-muted">Required when creating or saving changes.</small></div>
+        <div class="mb-3"><label for="staffPassword" class="form-label">Password</label><input type="password" class="form-control" id="staffPassword" placeholder="Enter password" required /></div>
         <div id="staffFormError" class="alert alert-danger" hidden></div>
     </div><div class="modal-footer"><button type="button" class="btn btn-light" id="cancelStaffModal">Cancel</button><button type="submit" class="btn btn-dark" id="saveStaffButton">Create Staff</button></div></form>
 </div></div>

@@ -107,12 +107,14 @@
             <strong>@username</strong>
             <span>Administrator</span>
         </div>
-        <a class="logout" href="@Url.Action("Logout", "Admin")" title="Sign out" aria-label="Sign out">
+        <form asp-controller="Admin" asp-action="Logout" method="post">
+        <button type="submit" class="logout" title="Sign out" aria-label="Sign out">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 @Html.Raw(icons["logout"])
             </svg>
-        </a>
+        </button>
+        </form>
     </div>
 
 </aside>

@@ -211,8 +211,8 @@ async function saveReward(event) {
         Status: document.getElementById("rewardStatusInput").value,
         Image: document.getElementById("rewardImage").value.trim(),
         ImageByte: row ? rewardValue(row, "ImageByte") : "",
-        CreateDate: rewardIsoDate(document.getElementById("rewardCreateDate").value),
-        ExpireDate: rewardIsoDate(document.getElementById("rewardExpireDate").value),
+        CreateDate: rewardIsoDate(document.getElementById("rewardCreateDate").value, row ? rewardCreated(row) : null),
+        ExpireDate: rewardIsoDate(document.getElementById("rewardExpireDate").value, row ? rewardExpires(row) : null),
         Description: description,
         DescriptionIOS: descriptionIos || description || "No description provided.",
         TnC: document.getElementById("rewardTnc").value.trim()
@@ -308,7 +308,12 @@ function rewardDateInput(value) {
     return date.toISOString().slice(0, 16);
 }
 
-function rewardIsoDate(value) { return value ? new Date(value).toISOString() : null; }
+function rewardIsoDate(value, original = null) {
+    // The provider returns date-times without an offset. Preserve unchanged
+    // values verbatim so unrelated edits cannot shift them on each save.
+    if (original && value === rewardDateInput(original)) return original;
+    return value ? new Date(value).toISOString() : null;
+}
 function expiryLabel(row) { const time = rewardTimestamp(rewardExpires(row)); if (!time) return "No expiry date"; if (time < Date.now()) return "Expired"; const days = Math.ceil((time - Date.now()) / 86400000); return days <= 30 ? `${days} days remaining` : "Expiry date"; }
 function safeRewardImage(value) { const image = String(value || "").trim(); return /^(https?:\/\/|data:image\/)/i.test(image) ? image : ""; }
 

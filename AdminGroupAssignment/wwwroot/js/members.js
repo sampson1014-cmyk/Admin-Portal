@@ -2184,6 +2184,7 @@ function showMemberModal() {
     }
 
 
+    setText("saveMember", modal.dataset.mode === "edit" ? "Save changes" : "Create member");
     modal.removeAttribute(
         "hidden"
     );

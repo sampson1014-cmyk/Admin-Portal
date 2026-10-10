@@ -23,17 +23,41 @@ const normalizedKey = value => String(value ?? "").replace(/[^a-z0-9]/gi, "").to
 const rowEntries = row => row && typeof row === "object" ? Object.entries(row) : [];
 
 function pick(row, keys, fallback = "") {
-    const wanted = new Set(keys.map(normalizedKey));
-    const match = rowEntries(row).find(([key, value]) => wanted.has(normalizedKey(key)) && value !== undefined && value !== null && value !== "");
-    return match ? match[1] : fallback;
+    const entries = rowEntries(row);
+    for (const key of keys) {
+        const match = entries.find(([name, value]) => normalizedKey(name) === normalizedKey(key) && value !== undefined && value !== null && value !== "");
+        if (match) return match[1];
+    }
+    return fallback;
 }
 
-const dateValue = row => pick(row, ["transactionDate", "createdDate", "createdAt", "date", "topupDate", "spendDate", "registerTime", "updatedDate", "time"]);
-const referenceValue = row => pick(row, ["transactionId", "transactionNo", "referenceNo", "refNo", "topupId", "spendId", "rewardId", "voucherId", "stampId", "pointId", "id"]);
-const memberValue = row => pick(row, ["memberName", "memberFullName", "name", "memberId", "userId", "phoneNumber", "memberPhone", "email"]);
+const dateValue = row => pick(row, ["spendTime", "dateTime", "dateAssign", "claimDate", "receiveDate", "useDate", "redeemDate", "assignDate", "createDate", "transactionDate", "createdDate", "createdAt", "date", "topupDate", "spendDate", "registerTime", "updatedDate", "time"]);
+const referenceValue = row => pick(row, ["referenceNumber", "transactionNo", "referenceNo", "refNo", "transactionId", "topupId", "spendId", "rewardId", "voucherId", "stampId", "pointId", "id"]);
+const memberValue = row => pick(row, ["memberName", "memberFullName", "memberPhone", "userPhoneNumber", "phoneNumber", "phone", "email", "memberId", "userId"]);
 const descriptionValue = row => pick(row, ["description", "remarks", "rewardName", "voucherName", "stampName", "pointDescription", "paymentMethod", "type"], transactionTypes[currentTransactionType].title);
-const amountValue = row => pick(row, transactionTypes[currentTransactionType].valueKeys, 0);
-const statusValue = row => pick(row, ["status", "transactionStatus", "accountStatus", "paymentStatus", "isPaid"], "Completed");
+const amountValue = row => {
+    if (currentTransactionType.startsWith("stamp")) {
+        const assigned = pick(row, ["totalAssignStamp"], null), used = pick(row, ["totalUseStamp"], null);
+        if (assigned !== null && numericValue(used) === 0) return assigned;
+    }
+    const stampKeys = ["totalUseStamp", "totalAssignStamp", "stamp", ...transactionTypes[currentTransactionType].valueKeys];
+    return pick(row, currentTransactionType.startsWith("stamp") ? stampKeys : transactionTypes[currentTransactionType].valueKeys, null);
+};
+const statusValue = row => {
+    const reported = pick(row, ["status", "transactionStatus", "paymentStatus"], null);
+    if (reported !== null) return reported;
+    const paid = pick(row, ["isPaid"], null);
+    if (paid !== null) return /^(true|1|yes|paid)$/i.test(String(paid)) ? "Paid" : "Unpaid";
+    if (currentTransactionType.startsWith("stamp")) {
+        const used = pick(row, ["totalUseStamp"], null), assigned = pick(row, ["totalAssignStamp"], null);
+        if (numericValue(used) > 0 && numericValue(assigned) > 0) return "Earned and redeemed";
+        if (numericValue(used) > 0) return "Redeemed";
+        if (numericValue(assigned) > 0) return "Earned";
+        if (used !== null) return "No stamps redeemed";
+        if (assigned !== null) return "No stamps earned";
+    }
+    return "Not reported";
+};
 const escapeHtml = text => String(text ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -175,9 +199,9 @@ function updateStatusOptions() {
 
 function updateSummary() {
     document.getElementById("transactionTotal").textContent = transactionRows.length.toLocaleString();
-    document.getElementById("transactionCompleted").textContent = transactionRows.filter(row => !unsuccessfulStatuses.has(String(statusValue(row)).toLowerCase())).length.toLocaleString();
+    document.getElementById("transactionCompleted").textContent = transactionRows.filter(row => /^(completed|complete|paid|success|successful)$/i.test(String(statusValue(row)))).length.toLocaleString();
     const total = transactionRows.reduce((sum, row) => sum + numericValue(amountValue(row)), 0);
-    document.getElementById("transactionValue").textContent = formatValue(total, true);
+    document.getElementById("transactionValue").textContent = formatValue(transactionRows.length && transactionRows.every(row => amountValue(row) === null) ? null : total);
     document.getElementById("transactionMembers").textContent = new Set(transactionRows.map(memberValue).filter(Boolean).map(value => String(value).toLowerCase())).size.toLocaleString();
 }
 
@@ -242,6 +266,7 @@ function formatDate(value) {
 }
 
 function formatValue(value) {
+    if (value === null || value === undefined || value === "") return "—";
     const definition = transactionTypes[currentTransactionType];
     const number = typeof value === "number" ? value : numericValue(value);
     if (!Number.isFinite(number)) return String(value || "-");

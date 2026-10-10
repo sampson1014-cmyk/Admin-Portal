@@ -11,6 +11,7 @@ const address = item => get(item, ["address", "Address"]);
 const status = item => get(item, ["status", "Status", "accountStatus", "AccountStatus"], "Inactive");
 const isActive = item => ["active", "activated", "enabled"].includes(String(status(item)).toLowerCase());
 const escapeHtml = value => String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+const displayOutletValue = value => escapeHtml(String(value ?? "").trim() || "Empty");
 
 document.addEventListener("DOMContentLoaded", () => {
     outletModal = document.getElementById("outletModal");
@@ -21,7 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
     outletModal.addEventListener("click", event => { if (event.target === outletModal) closeOutletDialog(); });
     document.getElementById("outletSearch").addEventListener("input", filterOutlets);
     document.getElementById("outletStatusFilter").addEventListener("change", filterOutlets);
-    document.getElementById("clearOutletFilters").addEventListener("click", () => { document.getElementById("outletSearch").value = ""; document.getElementById("outletStatusFilter").value = ""; filterOutlets(); });
+    document.getElementById("outletSort").addEventListener("change", filterOutlets);
+    document.getElementById("clearOutletFilters").addEventListener("click", () => { document.getElementById("outletSearch").value = ""; document.getElementById("outletStatusFilter").value = ""; document.getElementById("outletSort").value = "id-asc"; filterOutlets(); });
     document.getElementById("outletForm").addEventListener("submit", saveOutlet);
     document.getElementById("outletTableBody").addEventListener("click", handleAction);
     loadOutlets();
@@ -42,6 +44,7 @@ async function loadOutlets() {
 function filterOutlets() {
     const search = document.getElementById("outletSearch").value.trim().toLowerCase(), state = document.getElementById("outletStatusFilter").value;
     filteredOutlets = outlets.filter(item => (!search || [outletId(item), outletCode(item), outletName(item), phone(item), address(item)].join(" ").toLowerCase().includes(search)) && (!state || (state === "active" ? isActive(item) : !isActive(item))));
+    filteredOutlets = window.AdminListSort(filteredOutlets, document.getElementById("outletSort").value, outletName, outletId);
     document.getElementById("totalOutlets").textContent = outlets.length;
     document.getElementById("activeOutlets").textContent = outlets.filter(isActive).length;
     document.getElementById("inactiveOutlets").textContent = outlets.filter(item => !isActive(item)).length;
@@ -53,7 +56,7 @@ function render() {
     document.getElementById("outletResultText").textContent = `${filteredOutlets.length} outlet(s) found.`;
     if (!filteredOutlets.length) { body.innerHTML = ""; table.hidden = true; setState("No Outlets", "No outlet records match the current filter."); return; }
     document.getElementById("outletState").hidden = true; table.hidden = false;
-    body.innerHTML = filteredOutlets.map(item => `<tr><td>${escapeHtml(outletId(item))}<br><small>${escapeHtml(outletCode(item))}</small></td><td><strong>${escapeHtml(outletName(item))}</strong></td><td>${escapeHtml(phone(item))}</td><td>${escapeHtml(address(item))}</td><td><span class="merchant-status ${isActive(item) ? "active" : "inactive"}">${isActive(item) ? "Active" : "Inactive"}</span></td><td class="text-end"><div class="outlet-action-buttons"><button type="button" class="outlet-action-btn outlet-edit-btn" data-action="edit" data-id="${escapeHtml(outletId(item))}" title="Edit outlet" aria-label="Edit ${escapeHtml(outletName(item))}"><i class="bi bi-pencil-square"></i></button><button type="button" class="outlet-action-btn outlet-delete-btn" data-action="delete" data-id="${escapeHtml(outletId(item))}" title="Delete outlet" aria-label="Delete ${escapeHtml(outletName(item))}"><i class="bi bi-trash3"></i></button></div></td></tr>`).join("");
+    body.innerHTML = filteredOutlets.map(item => `<tr><td>${displayOutletValue(outletId(item))}<br><small>${displayOutletValue(outletCode(item))}</small></td><td><strong>${displayOutletValue(outletName(item))}</strong></td><td>${displayOutletValue(phone(item))}</td><td>${displayOutletValue(address(item))}</td><td><span class="merchant-status ${isActive(item) ? "active" : "inactive"}">${isActive(item) ? "Active" : "Inactive"}</span></td><td class="text-end"><div class="outlet-action-buttons"><button type="button" class="outlet-action-btn outlet-edit-btn" data-action="edit" data-id="${escapeHtml(outletId(item))}" title="Edit outlet" aria-label="Edit ${escapeHtml(outletName(item))}"><i class="bi bi-pencil-square"></i></button><button type="button" class="outlet-action-btn outlet-delete-btn" data-action="delete" data-id="${escapeHtml(outletId(item))}" title="Delete outlet" aria-label="Delete ${escapeHtml(outletName(item))}"><i class="bi bi-trash3"></i></button></div></td></tr>`).join("");
 }
 
 function setState(title, text) { document.getElementById("outletStateTitle").textContent = title; document.getElementById("outletStateText").textContent = text; document.getElementById("outletState").hidden = false; }

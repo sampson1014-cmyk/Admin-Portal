@@ -166,6 +166,9 @@ function bindMerchantEvents() {
             "clearMerchantFilters"
         );
 
+    const sortControl = document.getElementById("merchantSort");
+    sortControl?.addEventListener("change", filterMerchants);
+
 
     if (clearButton) {
 
@@ -178,6 +181,7 @@ function bindMerchantEvents() {
                     searchInput.value = "";
 
                 }
+                if (sortControl) sortControl.value = "id-asc";
 
 
                 if (statusFilter) {
@@ -433,7 +437,7 @@ async function loadMerchants() {
 
         updateStatistics();
 
-        renderMerchants();
+        filterMerchants();
 
     }
     catch (error) {
@@ -1120,6 +1124,7 @@ function filterMerchants() {
         );
 
 
+    filteredMerchants = window.AdminListSort(filteredMerchants, document.getElementById("merchantSort")?.value, getMerchantName, getMerchantId);
     renderMerchants();
 
 }
@@ -1292,12 +1297,12 @@ function renderMerchants() {
 
                     <div class="merchant-id">
 
-                        ${escapeHtml(id)}
+                        ${displayMerchantValue(id)}
 
                     </div>
 
                     <small>
-                        ${escapeHtml(merchantCode)}
+                        ${displayMerchantValue(merchantCode)}
                     </small>
 
                 </td>
@@ -1307,7 +1312,7 @@ function renderMerchants() {
 
                     <div class="merchant-name">
 
-                        ${escapeHtml(name)}
+                        ${displayMerchantValue(name)}
 
                     </div>
 
@@ -1316,14 +1321,14 @@ function renderMerchants() {
 
                 <td>
 
-                    ${escapeHtml(phone)}
+                    ${displayMerchantValue(phone)}
 
                 </td>
 
 
                 <td>
 
-                    ${escapeHtml(email)}
+                    ${displayMerchantValue(email)}
 
                 </td>
 
@@ -1335,7 +1340,7 @@ function renderMerchants() {
                         ${active ? "active" : "inactive"}
                     ">
 
-                        ${escapeHtml(status)}
+                        ${displayMerchantValue(status)}
 
                     </span>
 
@@ -3117,6 +3122,10 @@ function hideFormError() {
 ESCAPE HTML
 =====================================================
 */
+
+function displayMerchantValue(value) {
+    return escapeHtml(String(value ?? "").trim() || "Empty");
+}
 
 function escapeHtml(
     value

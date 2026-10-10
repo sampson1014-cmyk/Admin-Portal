@@ -1,0 +1,14 @@
+@model string
+<section class="card p-3 mb-3">
+    <h3 class="h5">Find @(Model == "members" ? "a member" : "an outlet")</h3>
+    <form data-record-lookup="@Model" class="d-flex gap-2 flex-wrap">
+        <select class="form-select w-auto" name="method" aria-label="Find by">
+            <option value="phone">Phone number</option>
+            @if (Model == "members") { <option value="email">Email address</option> }
+        </select>
+        <input class="form-control flex-grow-1" style="width:auto" name="value" maxlength="254" required placeholder="Enter the exact phone number or email" aria-label="Lookup value" />
+        <button class="btn btn-primary" type="submit">Find</button>
+        <p class="w-100 mb-0" data-lookup-status role="status" aria-live="polite"></p>
+        <div class="w-100" data-lookup-results></div>
+    </form>
+</section>
